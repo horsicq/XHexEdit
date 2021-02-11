@@ -22,17 +22,41 @@
 #define XHEXEDIT_H
 
 #include "xabstracttableview.h"
+#include "xbinary.h"
 
 class XHexEdit : public XAbstractTableView
 {
     Q_OBJECT
 
+    enum COLUMN
+    {
+        COLUMN_ADDRESS=0,
+        COLUMN_HEX
+    };
+
 public:
     XHexEdit(QWidget *pParent=nullptr);
     void setData(QIODevice *pDevice);
 
+protected:
+    virtual bool isOffsetValid(qint64 nOffset);
+    virtual bool isEnd(qint64 nOffset);
+    virtual OS cursorPositionToOS(CURSOR_POSITION cursorPosition);
+    virtual void updateData();
+    virtual void paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight);
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+    virtual qint64 getScrollValue();
+    virtual void setScrollValue(qint64 nOffset);
+    virtual void adjustColumns();
+
 private:
     QIODevice *g_pDevice;
+    qint64 g_nDataSize;
+    qint32 g_nBytesProLine;
+    qint32 g_nDataBlockSize;
+    QByteArray g_baDataHexBuffer;
+    qint32 g_nAddressWidth;
+    QList<QString> g_listAddresses;
 };
 
 #endif // XHEXEDIT_H
