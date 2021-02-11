@@ -23,6 +23,12 @@
 XHexEdit::XHexEdit(QWidget *pParent) : XAbstractTableView(pParent)
 {
     addColumn(tr("Offset"));
+    addColumn(tr("Hex"));
 
     setTextFont(getMonoFont(10));
+}
+
+void XHexEdit::setData(QIODevice *pDevice)
+{
+    g_pDevice=pDevice;
 }

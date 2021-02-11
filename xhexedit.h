@@ -29,6 +29,10 @@ class XHexEdit : public XAbstractTableView
 
 public:
     XHexEdit(QWidget *pParent=nullptr);
+    void setData(QIODevice *pDevice);
+
+private:
+    QIODevice *g_pDevice;
 };
 
 #endif // XHEXEDIT_H
