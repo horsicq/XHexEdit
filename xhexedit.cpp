@@ -283,7 +283,7 @@ void XHexEdit::adjustColumns()
 {
     const QFontMetricsF fm(getTextFont());
 
-    if(XBinary::getModeFromSize(g_nDataSize)==XBinary::MODE_64) // TODO Check adjust start address
+    if(XBinary::getWidthModeFromSize(g_nDataSize)==XBinary::MODE_64) // TODO Check adjust start address
     {
         g_nAddressWidth=16;
         setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("0000000000000000").width());
