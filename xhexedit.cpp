@@ -296,3 +296,8 @@ void XHexEdit::adjustColumns()
 
     setColumnWidth(COLUMN_HEX,g_nBytesProLine*2*getCharWidth()+2*getCharWidth()+getLineDelta()*g_nBytesProLine);
 }
+
+void XHexEdit::registerShortcuts(bool bState)
+{
+    Q_UNUSED(bState)
+}
