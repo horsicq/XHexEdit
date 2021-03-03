@@ -27,6 +27,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XAbstractTableView(pParent)
     g_nBytesProLine=16;
     g_nDataBlockSize=0;
     g_nAddressWidth=8;
+    g_nCursorHeight=2;
 
     addColumn(tr("Offset"));
     addColumn(tr("Hex"));
@@ -92,6 +93,7 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
         {
             osResult.nOffset=nBlockOffset+(cursorPosition.nCellLeft)/(getCharWidth()*2+getLineDelta());
             osResult.nSize=1;
+            // TODO Extra
         }
 
         if(!isOffsetValid(osResult.nOffset))
@@ -147,77 +149,80 @@ void XHexEdit::updateData()
 
 void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight)
 {
-        if(nColumn==COLUMN_ADDRESS)
+    if(nColumn==COLUMN_ADDRESS)
+    {
+        if(nRow<g_listAddresses.count())
         {
-            if(nRow<g_listAddresses.count())
-            {
-                pPainter->drawText(nLeft+getCharWidth(),nTop+nHeight,g_listAddresses.at(nRow)); // TODO Text Optional
-            }
+            pPainter->drawText(nLeft+getCharWidth(),nTop+nHeight,g_listAddresses.at(nRow)); // TODO Text Optional
         }
-        else if((nColumn==COLUMN_HEX))
+    }
+    else if((nColumn==COLUMN_HEX))
+    {
+        STATE state=getState();
+
+        if(nRow*g_nBytesProLine<g_nDataBlockSize)
         {
-            STATE state=getState();
+            qint64 nDataBlockStartOffset=getViewStart();
+            qint64 nDataBlockSize=qMin(g_nDataBlockSize-nRow*g_nBytesProLine,g_nBytesProLine);
 
-            if(nRow*g_nBytesProLine<g_nDataBlockSize)
+            for(int i=0;i<nDataBlockSize;i++)
             {
-                qint64 nDataBlockStartOffset=getViewStart();
-                qint64 nDataBlockSize=qMin(g_nDataBlockSize-nRow*g_nBytesProLine,g_nBytesProLine);
+                qint32 nIndex=nRow*g_nBytesProLine+i;
 
-                for(int i=0;i<nDataBlockSize;i++)
+                QString sHex=g_baDataHexBuffer.mid(nIndex*2,2);
+                QString sSymbol;
+
+                bool bBold=(sHex!="00");
+                bool bSelected=isOffsetSelected(nDataBlockStartOffset+nIndex);
+                bool bCursor=(state.nCursorOffset==(nDataBlockStartOffset+nIndex)); // TODO
+
+                if(bBold)
                 {
-                    qint32 nIndex=nRow*g_nBytesProLine+i;
+                    pPainter->save();
+                    QFont font=pPainter->font();
+                    font.setBold(true);
+                    pPainter->setFont(font);
+                }
 
-                    QString sHex=g_baDataHexBuffer.mid(nIndex*2,2);
-                    QString sSymbol;
+                QRect rectSymbol;
 
-                    bool bBold=(sHex!="00");
-                    bool bSelected=isOffsetSelected(nDataBlockStartOffset+nIndex);
-                    bool bCursor=(state.nCursorOffset==(nDataBlockStartOffset+nIndex)); // TODO
+                if(nColumn==COLUMN_HEX)
+                {
+                    rectSymbol.setRect(nLeft+getCharWidth()+(i*2)*getCharWidth()+i*getLineDelta(),nTop,2*getCharWidth()+getLineDelta(),nHeight);
+                    sSymbol=sHex;
+                }
 
-                    if(bBold)
+                if(bSelected|bCursor)
+                {
+                    QRect rectSelected;
+                    rectSelected.setRect(rectSymbol.x(),rectSymbol.y()+getLineDelta(),rectSymbol.width(),rectSymbol.height());
+
+                    if(bSelected)
                     {
-                        pPainter->save();
-                        QFont font=pPainter->font();
-                        font.setBold(true);
-                        pPainter->setFont(font);
+                        pPainter->fillRect(rectSelected,viewport()->palette().color(QPalette::Highlight));
                     }
 
-                    QRect rectSymbol;
-
-                    if(nColumn==COLUMN_HEX)
+                    if(bCursor)
                     {
-                        rectSymbol.setRect(nLeft+getCharWidth()+(i*2)*getCharWidth()+i*getLineDelta(),nTop,2*getCharWidth()+getLineDelta(),nHeight);
-                        sSymbol=sHex;
-                    }
-
-                    if(bSelected||bCursor)
-                    {
-                        QRect rectSelected;
-                        rectSelected.setRect(rectSymbol.x(),rectSymbol.y()+getLineDelta(),rectSymbol.width(),rectSymbol.height());
-
-                        if(bCursor)
+                        if(nColumn==state.cursorPosition.nColumn)
                         {
-                            if(nColumn==state.cursorPosition.nColumn)
-                            {
-                                setCursorData(rectSelected,sSymbol,nIndex);
-                            }
-                        }
+                            QRect rectCursor;
+                            rectCursor.setRect(rectSymbol.x(),rectSymbol.y()+getLineDelta()+rectSymbol.height(),rectSymbol.width(),g_nCursorHeight);
 
-                        if(bSelected)
-                        {
-                            pPainter->fillRect(rectSelected,viewport()->palette().color(QPalette::Highlight));
+                            setCursorData(rectCursor,rectSelected,sSymbol,nIndex);
                         }
                     }
+                }
 
-                    pPainter->drawText(rectSymbol.x(),rectSymbol.y()+nHeight,sSymbol);
+                pPainter->drawText(rectSymbol.x(),rectSymbol.y()+nHeight,sSymbol);
 
-                    if(bBold)
-                    {
-                        pPainter->restore();
-                    }
+                if(bBold)
+                {
+                    pPainter->restore();
                 }
             }
         }
+    }
 }
 
 void XHexEdit::keyPressEvent(QKeyEvent *pEvent)

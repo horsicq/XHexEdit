@@ -58,6 +58,7 @@ private:
     QByteArray g_baDataHexBuffer;
     qint32 g_nAddressWidth;
     QList<QString> g_listAddresses;
+    qint32 g_nCursorHeight;
 };
 
 #endif // XHEXEDIT_H
