@@ -172,17 +172,8 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                 QString sHex=g_baDataHexBuffer.mid(nIndex*2,2);
                 QString sSymbol;
 
-                bool bBold=(sHex!="00");
                 bool bSelected=isOffsetSelected(nDataBlockStartOffset+nIndex);
                 bool bCursor=(state.nCursorOffset==(nDataBlockStartOffset+nIndex)); // TODO
-
-                if(bBold)
-                {
-                    pPainter->save();
-                    QFont font=pPainter->font();
-                    font.setBold(true);
-                    pPainter->setFont(font);
-                }
 
                 QRect rectSymbol;
 
@@ -207,19 +198,14 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                         if(nColumn==state.cursorPosition.nColumn)
                         {
                             QRect rectCursor;
-                            rectCursor.setRect(rectSymbol.x(),rectSymbol.y()+getLineDelta()+rectSymbol.height(),rectSymbol.width(),g_nCursorHeight);
+                            rectCursor.setRect(rectSymbol.x(),rectSymbol.y()+getLineDelta()+rectSymbol.height(),getCharWidth(),g_nCursorHeight);
 
-                            setCursorData(rectCursor,rectSelected,sSymbol,nIndex);
+                            setCursorData(rectCursor,QRect(),sSymbol,nIndex);
                         }
                     }
                 }
 
                 pPainter->drawText(rectSymbol.x(),rectSymbol.y()+nHeight,sSymbol);
-
-                if(bBold)
-                {
-                    pPainter->restore();
-                }
             }
         }
     }
