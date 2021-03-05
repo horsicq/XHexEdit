@@ -88,18 +88,35 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
         {
             osResult.nOffset=nBlockOffset;
             osResult.nSize=1;
+            osResult.varData=BYTEPOS_HIGH;
         }
         else if(cursorPosition.nColumn==COLUMN_HEX)
         {
-            osResult.nOffset=nBlockOffset+(cursorPosition.nCellLeft)/(getCharWidth()*2+getLineDelta());
+            qint32 nOffset=(cursorPosition.nCellLeft-getLineDelta())/(getCharWidth()*2+getLineDelta());
+            qint32 nPos=(cursorPosition.nCellLeft-getLineDelta())%(getCharWidth()*2+getLineDelta());
+
+            qDebug("Pos: %d",nPos);
+
+            osResult.nOffset=nBlockOffset+nOffset;
             osResult.nSize=1;
-            // TODO Extra
+
+            if(nPos>getCharWidth())
+            {
+                osResult.varData=BYTEPOS_LOW;
+            }
+            else
+            {
+                osResult.varData=BYTEPOS_HIGH;
+            }
+
+            qDebug("varExtra: %d",osResult.varData.toInt());
         }
 
         if(!isOffsetValid(osResult.nOffset))
         {
             osResult.nOffset=g_nDataSize; // TODO Check
             osResult.nSize=0;
+            osResult.varData=BYTEPOS_HIGH;
         }
     }
 
@@ -197,8 +214,18 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                     {
                         if(nColumn==state.cursorPosition.nColumn)
                         {
+                            qint32 nX=rectSymbol.x();
+
+                            qDebug("TEST %d",state.varCursorData.toInt());
+
+                            if(state.varCursorData.toInt()==BYTEPOS_LOW)
+                            {
+                                nX+=getCharWidth();
+                                qDebug("TEST");
+                            }
+
                             QRect rectCursor;
-                            rectCursor.setRect(rectSymbol.x(),rectSymbol.y()+getLineDelta()+rectSymbol.height(),getCharWidth(),g_nCursorHeight);
+                            rectCursor.setRect(nX,rectSymbol.y()+getLineDelta()+rectSymbol.height(),getCharWidth(),g_nCursorHeight);
 
                             setCursorData(rectCursor,QRect(),sSymbol,nIndex);
                         }

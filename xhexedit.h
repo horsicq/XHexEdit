@@ -34,6 +34,12 @@ class XHexEdit : public XAbstractTableView
         COLUMN_HEX
     };
 
+    enum BYTEPOS
+    {
+        BYTEPOS_HIGH=0,
+        BYTEPOS_LOW
+    };
+
 public:
     XHexEdit(QWidget *pParent=nullptr);
     void setData(QIODevice *pDevice);
