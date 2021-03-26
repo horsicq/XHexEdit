@@ -240,7 +240,104 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
 
 void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
 {
+    // Move commands
+    if( pEvent->matches(QKeySequence::MoveToNextChar)||
+        pEvent->matches(QKeySequence::MoveToPreviousChar)||
+        pEvent->matches(QKeySequence::MoveToNextLine)||
+        pEvent->matches(QKeySequence::MoveToPreviousLine)||
+        pEvent->matches(QKeySequence::MoveToStartOfLine)||
+        pEvent->matches(QKeySequence::MoveToEndOfLine)||
+        pEvent->matches(QKeySequence::MoveToNextPage)||
+        pEvent->matches(QKeySequence::MoveToPreviousPage)||
+        pEvent->matches(QKeySequence::MoveToStartOfDocument)||
+        pEvent->matches(QKeySequence::MoveToEndOfDocument))
+    {
+        qint64 nViewStart=getViewStart();
 
+        if(pEvent->matches(QKeySequence::MoveToNextChar))
+        {
+            setCursorOffset(getCursorOffset()+1);
+        }
+        else if(pEvent->matches(QKeySequence::MoveToPreviousChar))
+        {
+            setCursorOffset(getCursorOffset()-1);
+        }
+        else if(pEvent->matches(QKeySequence::MoveToNextLine))
+        {
+            setCursorOffset(getCursorOffset()+g_nBytesProLine);
+        }
+        else if(pEvent->matches(QKeySequence::MoveToPreviousLine))
+        {
+            setCursorOffset(getCursorOffset()-g_nBytesProLine);
+        }
+        else if(pEvent->matches(QKeySequence::MoveToStartOfLine))
+        {
+            setCursorOffset(getCursorOffset()-(getCursorDelta()%g_nBytesProLine));
+        }
+        else if(pEvent->matches(QKeySequence::MoveToEndOfLine))
+        {
+            setCursorOffset(getCursorOffset()-(getCursorDelta()%g_nBytesProLine)+g_nBytesProLine-1);
+        }
+
+        if((getCursorOffset()<0)||(pEvent->matches(QKeySequence::MoveToStartOfDocument)))
+        {
+            setCursorOffset(0);
+        }
+
+        if((getCursorOffset()>=g_nDataSize)||(pEvent->matches(QKeySequence::MoveToEndOfDocument)))
+        {
+            setCursorOffset(g_nDataSize-1);
+        }
+
+        if( pEvent->matches(QKeySequence::MoveToNextChar)||
+            pEvent->matches(QKeySequence::MoveToPreviousChar)||
+            pEvent->matches(QKeySequence::MoveToNextLine)||
+            pEvent->matches(QKeySequence::MoveToPreviousLine))
+        {
+            qint64 nRelOffset=getCursorOffset()-nViewStart;
+
+            if(nRelOffset>=g_nBytesProLine*getLinesProPage())
+            {
+                _goToOffset(nViewStart+g_nBytesProLine,true);
+            }
+            else if(nRelOffset<0)
+            {
+                if(!_goToOffset(nViewStart-g_nBytesProLine,true))
+                {
+                    _goToOffset(0);
+                }
+            }
+        }
+        else if(pEvent->matches(QKeySequence::MoveToNextPage)||
+                pEvent->matches(QKeySequence::MoveToPreviousPage))
+        {
+            if(pEvent->matches(QKeySequence::MoveToNextPage))
+            {
+                _goToOffset(nViewStart+g_nBytesProLine*getLinesProPage());
+            }
+            else if(pEvent->matches(QKeySequence::MoveToPreviousPage))
+            {
+                _goToOffset(nViewStart-g_nBytesProLine*getLinesProPage());
+            }
+        }
+        else if(pEvent->matches(QKeySequence::MoveToStartOfDocument)||
+                pEvent->matches(QKeySequence::MoveToEndOfDocument)) // TODO
+        {
+            _goToOffset(getCursorOffset());
+        }
+
+        adjust();
+        viewport()->update();
+    }
+    else if(pEvent->matches(QKeySequence::SelectAll))
+    {
+        //TODO
+        //_selectAllSlot();
+    }
+    else
+    {
+        XAbstractTableView::keyPressEvent(pEvent);
+    }
 }
 
 qint64 XHexEdit::getScrollValue()
