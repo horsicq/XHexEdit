@@ -95,8 +95,6 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
             qint32 nOffset=(cursorPosition.nCellLeft-getLineDelta())/(getCharWidth()*2+getLineDelta());
             qint32 nPos=(cursorPosition.nCellLeft-getLineDelta())%(getCharWidth()*2+getLineDelta());
 
-            qDebug("Pos: %d",nPos);
-
             osResult.nOffset=nBlockOffset+nOffset;
             osResult.nSize=1;
 
@@ -108,8 +106,6 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
             {
                 osResult.varData=BYTEPOS_HIGH;
             }
-
-            qDebug("varExtra: %d",osResult.varData.toInt());
         }
 
         if(!isOffsetValid(osResult.nOffset))
@@ -216,12 +212,9 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                         {
                             qint32 nX=rectSymbol.x();
 
-                            qDebug("TEST %d",state.varCursorData.toInt());
-
-                            if(state.varCursorData.toInt()==BYTEPOS_LOW)
+                            if(state.varCursorExtraInfo.toInt()==BYTEPOS_LOW)
                             {
                                 nX+=getCharWidth();
-                                qDebug("TEST");
                             }
 
                             QRect rectCursor;
@@ -240,6 +233,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
 
 void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
 {
+    STATE state=getState();
     // Move commands
     if( pEvent->matches(QKeySequence::MoveToNextChar)||
         pEvent->matches(QKeySequence::MoveToPreviousChar)||
@@ -256,37 +250,61 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
 
         if(pEvent->matches(QKeySequence::MoveToNextChar))
         {
-            setCursorOffset(getCursorOffset()+1);
+            if(state.varCursorExtraInfo.toInt()==BYTEPOS_HIGH)
+            {
+                state.varCursorExtraInfo=BYTEPOS_LOW;
+            }
+            else
+            {
+                state.varCursorExtraInfo=BYTEPOS_HIGH;
+                state.nCursorOffset++;
+            }
+
+            setCursorOffset(state.nCursorOffset,-1,state.varCursorExtraInfo);
         }
         else if(pEvent->matches(QKeySequence::MoveToPreviousChar))
         {
-            setCursorOffset(getCursorOffset()-1);
+            STATE state=getState();
+
+            if(state.varCursorExtraInfo.toInt()==BYTEPOS_LOW)
+            {
+                state.varCursorExtraInfo=BYTEPOS_HIGH;
+            }
+            else
+            {
+                state.varCursorExtraInfo=BYTEPOS_LOW;
+                state.nCursorOffset--;
+            }
+
+            setCursorOffset(state.nCursorOffset,-1,state.varCursorExtraInfo);
         }
         else if(pEvent->matches(QKeySequence::MoveToNextLine))
         {
-            setCursorOffset(getCursorOffset()+g_nBytesProLine);
+            setCursorOffset(getCursorOffset()+g_nBytesProLine,-1,state.varCursorExtraInfo);
         }
         else if(pEvent->matches(QKeySequence::MoveToPreviousLine))
         {
-            setCursorOffset(getCursorOffset()-g_nBytesProLine);
+            setCursorOffset(getCursorOffset()-g_nBytesProLine,-1,state.varCursorExtraInfo);
         }
         else if(pEvent->matches(QKeySequence::MoveToStartOfLine))
         {
-            setCursorOffset(getCursorOffset()-(getCursorDelta()%g_nBytesProLine));
+            setCursorOffset(getCursorOffset()-(getCursorDelta()%g_nBytesProLine),-1,state.varCursorExtraInfo);
         }
         else if(pEvent->matches(QKeySequence::MoveToEndOfLine))
         {
-            setCursorOffset(getCursorOffset()-(getCursorDelta()%g_nBytesProLine)+g_nBytesProLine-1);
+            setCursorOffset(getCursorOffset()-(getCursorDelta()%g_nBytesProLine)+g_nBytesProLine-1,-1,state.varCursorExtraInfo);
         }
 
         if((getCursorOffset()<0)||(pEvent->matches(QKeySequence::MoveToStartOfDocument)))
         {
-            setCursorOffset(0);
+            state.varCursorExtraInfo=BYTEPOS_HIGH;
+            setCursorOffset(0,-1,state.varCursorExtraInfo);
         }
 
         if((getCursorOffset()>=g_nDataSize)||(pEvent->matches(QKeySequence::MoveToEndOfDocument)))
         {
-            setCursorOffset(g_nDataSize-1);
+            state.varCursorExtraInfo=BYTEPOS_LOW;
+            setCursorOffset(g_nDataSize-1,-1,state.varCursorExtraInfo);
         }
 
         if( pEvent->matches(QKeySequence::MoveToNextChar)||
