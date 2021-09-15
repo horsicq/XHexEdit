@@ -20,7 +20,7 @@
 //
 #include "xhexedit.h"
 
-XHexEdit::XHexEdit(QWidget *pParent) : XAbstractTableView(pParent)
+XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
 {
     g_pDevice=nullptr;
     g_nDataSize=0;
@@ -55,23 +55,6 @@ void XHexEdit::setData(QIODevice *pDevice)
     setTotalLineCount(nTotalLineCount);
 
     reload(true);
-}
-
-bool XHexEdit::isOffsetValid(qint64 nOffset)
-{
-    bool bResult=false;
-
-    if((nOffset>=0)&&(nOffset<g_nDataSize))
-    {
-        bResult=true;
-    }
-
-    return bResult;
-}
-
-bool XHexEdit::isEnd(qint64 nOffset)
-{
-    return (nOffset==g_nDataSize);
 }
 
 XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_POSITION cursorPosition)

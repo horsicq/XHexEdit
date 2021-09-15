@@ -21,10 +21,9 @@
 #ifndef XHEXEDIT_H
 #define XHEXEDIT_H
 
-#include "xabstracttableview.h"
-#include "xbinary.h"
+#include "xdevicetableview.h"
 
-class XHexEdit : public XAbstractTableView
+class XHexEdit : public XDeviceTableView
 {
     Q_OBJECT
 
@@ -45,8 +44,6 @@ public:
     void setData(QIODevice *pDevice);
 
 protected:
-    virtual bool isOffsetValid(qint64 nOffset);
-    virtual bool isEnd(qint64 nOffset);
     virtual OS cursorPositionToOS(CURSOR_POSITION cursorPosition);
     virtual void updateData();
     virtual void paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight);
