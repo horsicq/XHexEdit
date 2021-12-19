@@ -129,7 +129,7 @@ void XHexEdit::updateData()
             baDataBuffer.resize(g_nDataBlockSize);
             g_baDataHexBuffer=QByteArray(baDataBuffer.toHex());
 
-            for(int i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
+            for(qint32 i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
             {
                 QString sAddress=QString("%1").arg(i+nBlockOffset,g_nAddressWidth,16,QChar('0'));
 
