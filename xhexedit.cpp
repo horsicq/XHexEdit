@@ -161,7 +161,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
             qint64 nDataBlockStartOffset=getViewStart();
             qint64 nDataBlockSize=qMin(g_nDataBlockSize-nRow*g_nBytesProLine,g_nBytesProLine);
 
-            for(int i=0;i<nDataBlockSize;i++)
+            for(qint32 i=0;i<nDataBlockSize;i++)
             {
                 qint32 nIndex=nRow*g_nBytesProLine+i;
 
