@@ -1,5 +1,11 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
+
+HEADERS += \
+    $$PWD/xhexedit.h
+
+SOURCES += \
+    $$PWD/xhexedit.cpp
     
 !contains(XCONFIG, xabstracttableview) {
     XCONFIG += xabstracttableview
@@ -10,9 +16,3 @@ DEPENDPATH += $$PWD
     XCONFIG += xbinary
     include($$PWD/../Formats/xbinary.pri)
 }
-
-HEADERS += \
-    $$PWD/xhexedit.h
-
-SOURCES += \
-    $$PWD/xhexedit.cpp
