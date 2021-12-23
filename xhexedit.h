@@ -41,6 +41,7 @@ class XHexEdit : public XDeviceTableView
 
 public:
     XHexEdit(QWidget *pParent=nullptr);
+
     void setData(QIODevice *pDevice);
 
 protected:
