@@ -106,7 +106,7 @@ void XHexEdit::updateData()
 {
     if(g_pDevice)
     {
-        // Update cursor position
+        // Update cursor position !!!
         qint64 nBlockOffset=getViewStart();
         qint64 nCursorOffset=nBlockOffset+getCursorDelta();
 
