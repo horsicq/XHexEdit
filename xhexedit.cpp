@@ -93,7 +93,7 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
 
         if(!isOffsetValid(osResult.nOffset))
         {
-            osResult.nOffset=g_nDataSize; // TODO Check
+            osResult.nOffset=g_nDataSize; // TODO Check !!!
             osResult.nSize=0;
             osResult.varData=BYTEPOS_HIGH;
         }
