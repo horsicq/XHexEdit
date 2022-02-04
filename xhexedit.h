@@ -23,6 +23,7 @@
 
 #include "xdevicetableview.h"
 
+// TODO signal edited
 class XHexEdit : public XDeviceTableView
 {
     Q_OBJECT
