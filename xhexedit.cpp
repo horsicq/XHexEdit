@@ -143,7 +143,7 @@ void XHexEdit::updateData()
     }
 }
 
-void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight)
+void XHexEdit::paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight)
 {
     if(nColumn==COLUMN_ADDRESS)
     {
@@ -152,7 +152,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
             pPainter->drawText(nLeft+getCharWidth(),nTop+nHeight,g_listAddresses.at(nRow)); // TODO Text Optional
         }
     }
-    else if((nColumn==COLUMN_HEX))
+    else if(nColumn==COLUMN_HEX)
     {
         STATE state=getState();
 
