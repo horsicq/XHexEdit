@@ -56,8 +56,6 @@ protected:
     virtual void registerShortcuts(bool bState);
 
 private:
-    QIODevice *g_pDevice;
-    qint64 g_nDataSize;
     qint32 g_nBytesProLine;
     qint32 g_nDataBlockSize;
     QByteArray g_baDataHexBuffer;
