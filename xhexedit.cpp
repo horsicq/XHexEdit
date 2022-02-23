@@ -220,7 +220,6 @@ void XHexEdit::paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 nL
 
 void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
 {
-    // Move commands
     if( pEvent->matches(QKeySequence::MoveToNextChar)||
         pEvent->matches(QKeySequence::MoveToPreviousChar)||
         pEvent->matches(QKeySequence::MoveToNextLine)||
@@ -230,9 +229,33 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
         pEvent->matches(QKeySequence::MoveToNextPage)||
         pEvent->matches(QKeySequence::MoveToPreviousPage)||
         pEvent->matches(QKeySequence::MoveToStartOfDocument)||
-        pEvent->matches(QKeySequence::MoveToEndOfDocument))
+        pEvent->matches(QKeySequence::MoveToEndOfDocument)||
+        ((pEvent->key()>=Qt::Key_A)&&(pEvent->key()<=Qt::Key_F))||
+        ((pEvent->key()>=Qt::Key_0)&&(pEvent->key()<=Qt::Key_9)))
     {
         qint64 nViewStart=getViewStart();
+
+        if( ((pEvent->key()>=Qt::Key_A)&&(pEvent->key()<=Qt::Key_F))||
+            ((pEvent->key()>=Qt::Key_0)&&(pEvent->key()<=Qt::Key_9)))
+        {
+            STATE state=getState();
+
+            // TODO read byte
+
+            if(state.varCursorExtraInfo.toInt()==BYTEPOS_HIGH)
+            {
+                state.varCursorExtraInfo=BYTEPOS_LOW;
+            }
+            else
+            {
+                state.varCursorExtraInfo=BYTEPOS_HIGH;
+                state.nCursorOffset++;
+            }
+
+            // TODO write byte
+
+            setCursorOffset(state.nCursorOffset,-1,state.varCursorExtraInfo);
+        }
 
         if(pEvent->matches(QKeySequence::MoveToNextChar))
         {
