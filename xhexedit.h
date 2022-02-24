@@ -45,6 +45,9 @@ public:
 
     void setData(QIODevice *pDevice);
 
+private:
+    bool writeHexKey(qint64 nOffset,BYTEPOS bytePos,qint32 nKey);
+
 protected:
     virtual OS cursorPositionToOS(CURSOR_POSITION cursorPosition);
     virtual void updateData();
