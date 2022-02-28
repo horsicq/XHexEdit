@@ -55,7 +55,7 @@ void XHexEdit::setData(QIODevice *pDevice)
     reload(true);
 }
 
-bool XHexEdit::writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey)
+bool XHexEdit::writeHexKey(qint64 nOffset,BYTEPOS bytePos,qint32 nKey)
 {
     bool bResult=false;
 
