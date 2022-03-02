@@ -18,54 +18,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef XHEXEDIT_H
-#define XHEXEDIT_H
+#ifndef DIALOGHEXEDIT_H
+#define DIALOGHEXEDIT_H
 
-#include "xdevicetableview.h"
+#include "xhexedit.h"
 
-// TODO signal edited
-class XHexEdit : public XDeviceTableView
+namespace Ui {
+class DialogHexEdit;
+}
+
+class DialogHexEdit : public XShortcutsDialog
 {
     Q_OBJECT
 
-    enum COLUMN
-    {
-        COLUMN_ADDRESS=0,
-        COLUMN_HEX
-    };
-
-    enum BYTEPOS
-    {
-        BYTEPOS_HIGH=0,
-        BYTEPOS_LOW
-    };
-
 public:
-    XHexEdit(QWidget *pParent=nullptr);
+    explicit DialogHexEdit(QWidget *pParent=nullptr);
+    ~DialogHexEdit();
 
-    void setData(QIODevice *pDevice,quint64 nStartOffset);
+    void setData(QIODevice *pDevice,qint64 nStartOffset);
 
-private:
-    bool writeHexKey(qint64 nOffset,BYTEPOS bytePos,qint32 nKey);
+signals:
+    void changed();
 
-protected:
-    virtual OS cursorPositionToOS(CURSOR_POSITION cursorPosition);
-    virtual void updateData();
-    virtual void paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual qint64 getScrollValue();
-    virtual void setScrollValue(qint64 nOffset);
-    virtual void adjustColumns();
-    virtual void registerShortcuts(bool bState);
+private slots:
+    void on_pushButtonClose_clicked();
 
 private:
-    qint32 g_nBytesProLine;
-    qint32 g_nDataBlockSize;
-    QByteArray g_baDataHexBuffer;
-    qint32 g_nAddressWidth;
-    QList<QString> g_listAddresses;
-    qint32 g_nCursorHeight;
-    quint64 g_nStartOffset;
+    Ui::DialogHexEdit *ui;
 };
 
-#endif // XHEXEDIT_H
+#endif // DIALOGHEXEDIT_H

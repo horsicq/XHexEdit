@@ -26,6 +26,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     g_nDataBlockSize=0;
     g_nAddressWidth=8;
     g_nCursorHeight=2;
+    g_nStartOffset=0;
 
     addColumn(tr("Offset"));
     addColumn(tr("Hex"));
@@ -34,10 +35,11 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     setTextFont(getMonoFont(10));
 }
 
-void XHexEdit::setData(QIODevice *pDevice)
+void XHexEdit::setData(QIODevice *pDevice,quint64 nStartOffset)
 {
     // mb TODO options
     setDevice(pDevice);
+    g_nStartOffset=nStartOffset;
 
     resetCursorData();
 
@@ -175,7 +177,7 @@ void XHexEdit::updateData()
 
             for(qint32 i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
             {
-                qint64 nCurrentAddress=i+nBlockOffset;
+                qint64 nCurrentAddress=g_nStartOffset+i+nBlockOffset;
 
                 QString sAddress=XBinary::valueToHexColon(mode,nCurrentAddress);
 
@@ -301,7 +303,9 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
 
                 if(writeHexKey(state.nCursorOffset,(BYTEPOS)(state.varCursorExtraInfo.toInt()),nKey))
                 {
-                    updateData();
+                    setEdited();
+
+                    emit changed();
                 }
             }
 
@@ -326,7 +330,9 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
             {
                 if(writeHexKey(state.nCursorOffset,(BYTEPOS)(state.varCursorExtraInfo.toInt()),Qt::Key_0))
                 {
-                    updateData();
+                    setEdited();
+
+                    emit changed();
                 }
             }
 

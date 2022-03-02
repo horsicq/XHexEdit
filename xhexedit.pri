@@ -2,9 +2,11 @@ INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
 HEADERS += \
+    $$PWD/dialoghexedit.h \
     $$PWD/xhexedit.h
 
 SOURCES += \
+    $$PWD/dialoghexedit.cpp \
     $$PWD/xhexedit.cpp
     
 !contains(XCONFIG, xabstracttableview) {
@@ -19,4 +21,8 @@ SOURCES += \
 
 DISTFILES += \
     $$PWD/LICENSE \
-    $$PWD/README.md
+    $$PWD/README.md \
+    $$PWD/xhexedit.cmake
+
+FORMS += \
+    $$PWD/dialoghexedit.ui
