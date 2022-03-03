@@ -40,6 +40,17 @@ void DialogHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset)
     ui->widgetHexEdit->setData(pDevice,nStartOffset);
 }
 
+void DialogHexEdit::setBackupDevice(QIODevice *pDevice)
+{
+    ui->widgetHexEdit->setBackupDevice(pDevice);
+}
+
+void DialogHexEdit::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
+{
+    ui->widgetHexEdit->setGlobal(pShortcuts,pXOptions);
+    XShortcutsDialog::setGlobal(pShortcuts,pXOptions);
+}
+
 void DialogHexEdit::on_pushButtonClose_clicked()
 {
     this->close();

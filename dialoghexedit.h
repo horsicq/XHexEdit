@@ -36,6 +36,8 @@ public:
     ~DialogHexEdit();
 
     void setData(QIODevice *pDevice,qint64 nStartOffset);
+    void setBackupDevice(QIODevice *pDevice);
+    virtual void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
 
 signals:
     void changed();
