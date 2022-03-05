@@ -45,7 +45,7 @@ void DialogHexEdit::setBackupDevice(QIODevice *pDevice)
     ui->widgetHexEdit->setBackupDevice(pDevice);
 }
 
-void DialogHexEdit::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
+void DialogHexEdit::setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions)
 {
     ui->widgetHexEdit->setGlobal(pShortcuts,pXOptions);
     XShortcutsDialog::setGlobal(pShortcuts,pXOptions);
