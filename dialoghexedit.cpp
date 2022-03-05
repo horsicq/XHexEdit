@@ -35,7 +35,7 @@ DialogHexEdit::~DialogHexEdit()
     delete ui;
 }
 
-void DialogHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset)
+void DialogHexEdit::setData(QIODevice *pDevice,qint64 nStartOffset)
 {
     ui->widgetHexEdit->setData(pDevice,nStartOffset);
 }
