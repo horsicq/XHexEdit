@@ -54,6 +54,8 @@ void XHexEdit::setData(QIODevice *pDevice,quint64 nStartOffset)
 
     setTotalLineCount(nTotalLineCount);
 
+    setCursorOffset(nStartOffset,COLUMN_HEX);
+
     reload(true);
 }
 

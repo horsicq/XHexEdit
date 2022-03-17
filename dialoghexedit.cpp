@@ -38,6 +38,7 @@ DialogHexEdit::~DialogHexEdit()
 void DialogHexEdit::setData(QIODevice *pDevice,qint64 nStartOffset)
 {
     ui->widgetHexEdit->setData(pDevice,nStartOffset);
+    ui->widgetHexEdit->setFocus();
 }
 
 void DialogHexEdit::setBackupDevice(QIODevice *pDevice)
