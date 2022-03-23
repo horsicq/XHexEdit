@@ -307,7 +307,7 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
                 {
                     setEdited();
 
-                    emit changed();
+                    emit dataChanged();
                 }
             }
 
@@ -334,7 +334,7 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
                 {
                     setEdited();
 
-                    emit changed();
+                    emit dataChanged();
                 }
             }
 

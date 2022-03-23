@@ -40,7 +40,7 @@ public:
     virtual void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
 
 signals:
-    void changed();
+    void dataChanged();
 
 private slots:
     void on_pushButtonClose_clicked();

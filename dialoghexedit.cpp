@@ -27,7 +27,7 @@ DialogHexEdit::DialogHexEdit(QWidget *pParent) :
 {
     ui->setupUi(this);
 
-    connect(ui->widgetHexEdit,SIGNAL(changed()),this,SIGNAL(changed()));
+    connect(ui->widgetHexEdit,SIGNAL(dataChanged()),this,SIGNAL(dataChanged()));
 }
 
 DialogHexEdit::~DialogHexEdit()
