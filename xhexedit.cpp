@@ -24,7 +24,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
 {
     g_nBytesProLine=16; // TODO Set/Get
     g_nDataBlockSize=0;
-    g_nAddressWidth=8;
+    g_nAddressWidth=8; // TODO Set/Get
     g_nCursorHeight=2;
     g_nStartOffset=0;
 
@@ -197,6 +197,8 @@ void XHexEdit::updateData()
 
 void XHexEdit::paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight)
 {
+    Q_UNUSED(nWidth)
+
     if(nColumn==COLUMN_ADDRESS)
     {
         if(nRow<g_listAddresses.count())
