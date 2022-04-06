@@ -32,7 +32,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     addColumn(tr("Hex"));
 
     setSelectionEnable(false);
-    setTextFont(getMonoFont(10));
+    setTextFont(getMonoFont(10)); // TODO const
 }
 
 void XHexEdit::setData(QIODevice *pDevice,quint64 nStartOffset)
