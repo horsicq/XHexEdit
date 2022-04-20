@@ -185,7 +185,7 @@ void XHexEdit::updateData()
 
             for(qint32 i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
             {
-                qint64 nCurrentAddress=g_nStartOffset+i+nBlockOffset;
+                XADDR nCurrentAddress=g_nStartOffset+i+nBlockOffset;
 
                 QString sAddress=XBinary::valueToHexColon(mode,nCurrentAddress);
 
