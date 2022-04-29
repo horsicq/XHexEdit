@@ -187,7 +187,7 @@ void XHexEdit::updateData()
             {
                 XADDR nCurrentAddress=g_nStartOffset+i+nBlockOffset;
 
-                QString sAddress=XBinary::valueToHexColon(mode,nCurrentAddress);
+                QString sAddress=XBinary::valueToHexColon(mode,nCurrentAddress); // TODO Settings
 
                 g_listAddresses.append(sAddress);
             }
