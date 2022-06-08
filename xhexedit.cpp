@@ -430,10 +430,10 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
 
         adjust();
     }
-    else if(pEvent->matches(QKeySequence::SelectAll))
-    {
-        _selectAllSlot();
-    }
+//    else if(pEvent->matches(QKeySequence::SelectAll))
+//    {
+//        _selectAllSlot();
+//    }
     else
     {
         XAbstractTableView::keyPressEvent(pEvent);
