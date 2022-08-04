@@ -118,8 +118,8 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
         }
         else if(cursorPosition.nColumn==COLUMN_HEX)
         {
-            qint32 nOffset=(cursorPosition.nCellLeft-getLineDelta())/(getCharWidth()*2+getLineDelta());
-            qint32 nPos=(cursorPosition.nCellLeft-getLineDelta())%(getCharWidth()*2+getLineDelta());
+            qint32 nOffset=(cursorPosition.nCellLeft-getSideDelta())/(getCharWidth()*2+getSideDelta());
+            qint32 nPos=(cursorPosition.nCellLeft-getSideDelta())%(getCharWidth()*2+getSideDelta());
 
             osResult.nOffset=nBlockOffset+nOffset;
             osResult.nSize=1;
@@ -235,7 +235,7 @@ void XHexEdit::paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 nL
 
                 if(nColumn==COLUMN_HEX)
                 {
-                    rectSymbol.setRect(nLeft+getCharWidth()+(i*2)*getCharWidth()+i*getLineDelta(),nTop,2*getCharWidth()+getLineDelta(),nHeight);
+                    rectSymbol.setRect(nLeft+getCharWidth()+(i*2)*getCharWidth()+i*getSideDelta(),nTop,2*getCharWidth()+getSideDelta(),nHeight);
                     sSymbol=sHex;
                 }
 
@@ -509,7 +509,7 @@ void XHexEdit::adjustColumns()
         setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000").width());
     }
 
-    setColumnWidth(COLUMN_HEX,g_nBytesProLine*2*getCharWidth()+2*getCharWidth()+getLineDelta()*g_nBytesProLine);
+    setColumnWidth(COLUMN_HEX,g_nBytesProLine*2*getCharWidth()+2*getCharWidth()+getSideDelta()*g_nBytesProLine);
 }
 
 void XHexEdit::registerShortcuts(bool bState)
