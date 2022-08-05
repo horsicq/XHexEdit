@@ -498,15 +498,15 @@ void XHexEdit::adjustColumns()
 {
     const QFontMetricsF fm(getTextFont());
 
-    if(XBinary::getWidthModeFromSize(getDataSize())==XBinary::MODE_64) // TODO Check adjust start address
+    if(XBinary::getWidthModeFromSize(getDataSize())==XBinary::MODE_64)
     {
         g_nAddressWidth=16;
-        setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("0000000000000000").width());
+        setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000:00000000").width());
     }
     else
     {
         g_nAddressWidth=8;
-        setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000").width());
+        setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("0000:0000").width());
     }
 
     setColumnWidth(COLUMN_HEX,g_nBytesProLine*2*getCharWidth()+2*getCharWidth()+getSideDelta()*g_nBytesProLine);
