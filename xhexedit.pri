@@ -8,6 +8,9 @@ HEADERS += \
 SOURCES += \
     $$PWD/dialoghexedit.cpp \
     $$PWD/xhexedit.cpp
+
+FORMS += \
+    $$PWD/dialoghexedit.ui
     
 !contains(XCONFIG, xabstracttableview) {
     XCONFIG += xabstracttableview
@@ -23,6 +26,3 @@ DISTFILES += \
     $$PWD/LICENSE \
     $$PWD/README.md \
     $$PWD/xhexedit.cmake
-
-FORMS += \
-    $$PWD/dialoghexedit.ui
