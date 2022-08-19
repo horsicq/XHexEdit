@@ -27,12 +27,38 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     g_nCursorHeight=2; // TODO Set/Get
     g_nDataBlockSize=0;
     g_nStartOffset=0;
+    g_bIsAddressColon=false;
 
     addColumn(tr("Offset"));
     addColumn(tr("Hex"));
 
     setSelectionEnable(false); // TODO Set/Get
     setTextFont(getMonoFont(10)); // TODO const !!! mb move to XDeviceTableView
+}
+
+void XHexEdit::_adjustView()
+{
+    QFont _font;
+    QString sFont=getGlobalOptions()->getValue(XOptions::ID_HEX_FONT).toString();
+
+    if((sFont!="")&&_font.fromString(sFont))
+    {
+        setTextFont(_font);
+    }
+    // mb TODO errorString signal if invalid font
+    // TODO Check
+
+    g_bIsAddressColon=getGlobalOptions()->getValue(XOptions::ID_HEX_ADDRESSCOLON).toBool();
+}
+
+void XHexEdit::adjustView()
+{
+    _adjustView();
+
+    if(getDevice())
+    {
+        reload(true);
+    }
 }
 
 void XHexEdit::setData(QIODevice *pDevice,quint64 nStartOffset)
@@ -187,7 +213,16 @@ void XHexEdit::updateData()
             {
                 XADDR nCurrentAddress=g_nStartOffset+i+nBlockOffset;
 
-                QString sAddress=XBinary::valueToHexColon(mode,nCurrentAddress); // TODO Settings
+                QString sAddress;
+
+                if(g_bIsAddressColon)
+                {
+                    sAddress=XBinary::valueToHexColon(mode,nCurrentAddress);
+                }
+                else
+                {
+                    sAddress=XBinary::valueToHex(mode,nCurrentAddress);
+                }
 
                 g_listAddresses.append(sAddress);
             }

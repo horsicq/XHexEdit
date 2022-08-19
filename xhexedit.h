@@ -42,6 +42,9 @@ class XHexEdit : public XDeviceTableView
 public:
     XHexEdit(QWidget *pParent=nullptr);
 
+    void _adjustView();
+    void adjustView();
+
     void setData(QIODevice *pDevice,quint64 nStartOffset);
 
 private:
@@ -65,6 +68,7 @@ private:
     QList<QString> g_listAddresses;
     qint32 g_nCursorHeight;
     quint64 g_nStartOffset;
+    bool g_bIsAddressColon;
 };
 
 #endif // XHEXEDIT_H
