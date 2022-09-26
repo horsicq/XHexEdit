@@ -34,6 +34,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
 
     setSelectionEnable(false); // TODO Set/Get
     setTextFont(getMonoFont(10)); // TODO const !!! mb move to XDeviceTableView
+    setBlinkingCursorEnable(true);
 }
 
 void XHexEdit::_adjustView()
