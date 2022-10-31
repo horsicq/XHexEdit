@@ -44,7 +44,6 @@ public:
 
     void _adjustView();
     void adjustView();
-
     void setData(QIODevice *pDevice,quint64 nStartOffset);
 
 private:
