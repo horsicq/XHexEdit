@@ -31,7 +31,6 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
 
     addColumn(tr("Offset"));
     addColumn(tr("Hex"));
-
     setSelectionEnable(false); // TODO Set/Get
     setTextFont(getMonoFont(10)); // TODO const !!! mb move to XDeviceTableView
     setBlinkingCursorEnable(true);
