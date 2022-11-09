@@ -38,15 +38,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
 
 void XHexEdit::_adjustView()
 {
-    QFont _font;
-    QString sFont=getGlobalOptions()->getValue(XOptions::ID_HEX_FONT).toString();
-
-    if((sFont!="")&&_font.fromString(sFont))
-    {
-        setTextFont(_font);
-    }
-    // mb TODO errorString signal if invalid font
-    // TODO Check
+    setTextFontFromOptions(XOptions::ID_HEX_FONT);
 
     g_bIsAddressColon=getGlobalOptions()->getValue(XOptions::ID_HEX_ADDRESSCOLON).toBool();
 }
