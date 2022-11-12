@@ -23,36 +23,33 @@
 
 #include "xdevicetableview.h"
 
-class XHexEdit : public XDeviceTableView
-{
+class XHexEdit : public XDeviceTableView {
     Q_OBJECT
 
-    enum COLUMN
-    {
-        COLUMN_ADDRESS=0,
+    enum COLUMN {
+        COLUMN_ADDRESS = 0,
         COLUMN_HEX
     };
 
-    enum BYTEPOS
-    {
-        BYTEPOS_HIGH=0,
+    enum BYTEPOS {
+        BYTEPOS_HIGH = 0,
         BYTEPOS_LOW
     };
 
 public:
-    XHexEdit(QWidget *pParent=nullptr);
+    XHexEdit(QWidget *pParent = nullptr);
 
     void _adjustView();
     void adjustView();
-    void setData(QIODevice *pDevice,quint64 nStartOffset);
+    void setData(QIODevice *pDevice, quint64 nStartOffset);
 
 private:
-    bool writeHexKey(qint64 nOffset,BYTEPOS bytePos,qint32 nKey);
+    bool writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey);
 
 protected:
     virtual OS cursorPositionToOS(CURSOR_POSITION cursorPosition);
     virtual void updateData();
-    virtual void paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight);
+    virtual void paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight);
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual qint64 getScrollValue();
     virtual void setScrollValue(qint64 nOffset);
@@ -70,4 +67,4 @@ private:
     bool g_bIsAddressColon;
 };
 
-#endif // XHEXEDIT_H
+#endif  // XHEXEDIT_H

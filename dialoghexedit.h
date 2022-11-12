@@ -27,17 +27,16 @@ namespace Ui {
 class DialogHexEdit;
 }
 
-class DialogHexEdit : public XShortcutsDialog
-{
+class DialogHexEdit : public XShortcutsDialog {
     Q_OBJECT
 
 public:
-    explicit DialogHexEdit(QWidget *pParent=nullptr);
+    explicit DialogHexEdit(QWidget *pParent = nullptr);
     ~DialogHexEdit();
 
-    void setData(QIODevice *pDevice,qint64 nStartOffset);
+    void setData(QIODevice *pDevice, qint64 nStartOffset);
     void setBackupDevice(QIODevice *pDevice);
-    virtual void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
+    virtual void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions);
 
 signals:
     void dataChanged();
@@ -49,4 +48,4 @@ private:
     Ui::DialogHexEdit *ui;
 };
 
-#endif // DIALOGHEXEDIT_H
+#endif  // DIALOGHEXEDIT_H
