@@ -22,30 +22,36 @@
 
 #include "ui_dialoghexedit.h"
 
-DialogHexEdit::DialogHexEdit(QWidget *pParent) : XShortcutsDialog(pParent), ui(new Ui::DialogHexEdit) {
+DialogHexEdit::DialogHexEdit(QWidget *pParent) : XShortcutsDialog(pParent), ui(new Ui::DialogHexEdit)
+{
     ui->setupUi(this);
 
     connect(ui->widgetHexEdit, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 }
 
-DialogHexEdit::~DialogHexEdit() {
+DialogHexEdit::~DialogHexEdit()
+{
     delete ui;
 }
 
-void DialogHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset) {
+void DialogHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset)
+{
     ui->widgetHexEdit->setData(pDevice, nStartOffset);
     ui->widgetHexEdit->setFocus();
 }
 
-void DialogHexEdit::setBackupDevice(QIODevice *pDevice) {
+void DialogHexEdit::setBackupDevice(QIODevice *pDevice)
+{
     ui->widgetHexEdit->setBackupDevice(pDevice);
 }
 
-void DialogHexEdit::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions) {
+void DialogHexEdit::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
+{
     ui->widgetHexEdit->setGlobal(pShortcuts, pXOptions);
     XShortcutsDialog::setGlobal(pShortcuts, pXOptions);
 }
 
-void DialogHexEdit::on_pushButtonClose_clicked() {
+void DialogHexEdit::on_pushButtonClose_clicked()
+{
     this->close();
 }

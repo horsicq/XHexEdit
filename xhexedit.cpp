@@ -20,7 +20,8 @@
  */
 #include "xhexedit.h"
 
-XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent) {
+XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
+{
     g_nBytesProLine = 16;  // TODO Set/Get !!!
     g_nAddressWidth = 8;   // TODO Set/Get !!!
     g_nCursorHeight = 2;   // TODO Set/Get !!!
@@ -35,13 +36,15 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent) {
     setBlinkingCursorEnable(true);
 }
 
-void XHexEdit::_adjustView() {
+void XHexEdit::_adjustView()
+{
     setTextFontFromOptions(XOptions::ID_HEX_FONT);
 
     g_bIsAddressColon = getGlobalOptions()->getValue(XOptions::ID_HEX_ADDRESSCOLON).toBool();
 }
 
-void XHexEdit::adjustView() {
+void XHexEdit::adjustView()
+{
     _adjustView();
 
     if (getDevice()) {
@@ -49,7 +52,8 @@ void XHexEdit::adjustView() {
     }
 }
 
-void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset) {
+void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
+{
     // mb TODO options
     setDevice(pDevice);
     g_nStartOffset = nStartOffset;
@@ -71,7 +75,8 @@ void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset) {
     reload(true);
 }
 
-bool XHexEdit::writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey) {
+bool XHexEdit::writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey)
+{
     bool bResult = false;
 
     QByteArray baByte = read_array(nOffset, 1);
@@ -103,7 +108,8 @@ bool XHexEdit::writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey) {
     return bResult;
 }
 
-XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_POSITION cursorPosition) {
+XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_POSITION cursorPosition)
+{
     OS osResult = {};
 
     osResult.nOffset = -1;
@@ -139,7 +145,8 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
     return osResult;
 }
 
-void XHexEdit::updateData() {
+void XHexEdit::updateData()
+{
     if (getDevice()) {
         if (getXInfoDB()) {
             QList<XBinary::MEMORY_REPLACE> listMR = getXInfoDB()->getMemoryReplaces(getMemoryMap()->nModuleAddress, getMemoryMap()->nImageSize);
@@ -193,7 +200,8 @@ void XHexEdit::updateData() {
     }
 }
 
-void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight) {
+void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight)
+{
     Q_UNUSED(nWidth)
 
     if (nColumn == COLUMN_ADDRESS) {
@@ -253,7 +261,8 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
     }
 }
 
-void XHexEdit::keyPressEvent(QKeyEvent *pEvent) {
+void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
+{
     if (pEvent->matches(QKeySequence::MoveToNextChar) || pEvent->matches(QKeySequence::MoveToPreviousChar) || pEvent->matches(QKeySequence::MoveToNextLine) ||
         pEvent->matches(QKeySequence::MoveToPreviousLine) || pEvent->matches(QKeySequence::MoveToStartOfLine) || pEvent->matches(QKeySequence::MoveToEndOfLine) ||
         pEvent->matches(QKeySequence::MoveToNextPage) || pEvent->matches(QKeySequence::MoveToPreviousPage) || pEvent->matches(QKeySequence::MoveToStartOfDocument) ||
@@ -361,7 +370,8 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent) {
     }
 }
 
-qint64 XHexEdit::getScrollValue() {
+qint64 XHexEdit::getScrollValue()
+{
     qint64 nResult = 0;
 
     qint32 nValue = verticalScrollBar()->value();
@@ -381,7 +391,8 @@ qint64 XHexEdit::getScrollValue() {
     return nResult;
 }
 
-void XHexEdit::setScrollValue(qint64 nOffset) {
+void XHexEdit::setScrollValue(qint64 nOffset)
+{
     setViewStart(nOffset);
 
     qint32 nValue = 0;
@@ -401,7 +412,8 @@ void XHexEdit::setScrollValue(qint64 nOffset) {
     adjust(true);
 }
 
-void XHexEdit::adjustColumns() {
+void XHexEdit::adjustColumns()
+{
     const QFontMetricsF fm(getTextFont());
 
     if (XBinary::getWidthModeFromSize(getDataSize()) == XBinary::MODE_64) {
@@ -415,6 +427,7 @@ void XHexEdit::adjustColumns() {
     setColumnWidth(COLUMN_HEX, g_nBytesProLine * 2 * getCharWidth() + 2 * getCharWidth() + getSideDelta() * g_nBytesProLine);
 }
 
-void XHexEdit::registerShortcuts(bool bState) {
+void XHexEdit::registerShortcuts(bool bState)
+{
     Q_UNUSED(bState)
 }
