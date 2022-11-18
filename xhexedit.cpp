@@ -20,7 +20,8 @@
  */
 #include "xhexedit.h"
 
-XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
+XHexEdit::XHexEdit(QWidget *pParent)
+    : XDeviceTableView(pParent)
 {
     g_nBytesProLine = 16;  // TODO Set/Get !!!
     g_nAddressWidth = 8;   // TODO Set/Get !!!

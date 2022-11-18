@@ -22,7 +22,8 @@
 
 #include "ui_dialoghexedit.h"
 
-DialogHexEdit::DialogHexEdit(QWidget *pParent) : XShortcutsDialog(pParent), ui(new Ui::DialogHexEdit)
+DialogHexEdit::DialogHexEdit(QWidget *pParent)
+    : XShortcutsDialog(pParent), ui(new Ui::DialogHexEdit)
 {
     ui->setupUi(this);
 
