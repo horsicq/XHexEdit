@@ -54,7 +54,7 @@ void XHexEdit::adjustView()
 
 void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
 {
-    // mb TODO options
+    // mb TODO options !!!
     setDevice(pDevice);
     g_nStartOffset = nStartOffset;
 
