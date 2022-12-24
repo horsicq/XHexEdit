@@ -77,6 +77,7 @@ void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
 
 bool XHexEdit::writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey)
 {
+    // TODO delete/backspace
     bool bResult = false;
 
     QByteArray baByte = read_array(nOffset, 1);
