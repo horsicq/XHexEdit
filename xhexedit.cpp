@@ -284,9 +284,9 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
                 }
 
                 if (writeHexKey(state.nCursorViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), nKey)) {
-                    setEdited();
+                    setEdited(state.nCursorViewOffset, 1); // TODO Check mb Global
 
-                    emit dataChanged();
+                    emit dataChanged(state.nCursorViewOffset, 1);
                 }
             }
 
@@ -303,9 +303,9 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
 
             if ((pEvent->key() == Qt::Key_Backspace)) {
                 if (writeHexKey(state.nCursorViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), Qt::Key_0)) {
-                    setEdited();
+                    setEdited(state.nCursorViewOffset, 1); // TODO Check mb Global
 
-                    emit dataChanged();
+                    emit dataChanged(state.nCursorViewOffset, 1);
                 }
             }
 

@@ -26,7 +26,7 @@ DialogHexEdit::DialogHexEdit(QWidget *pParent) : XShortcutsDialog(pParent), ui(n
 {
     ui->setupUi(this);
 
-    connect(ui->widgetHexEdit, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
+    connect(ui->widgetHexEdit, SIGNAL(dataChanged(qint64, qint64)), this, SIGNAL(dataChanged(qint64, qint64)));
 }
 
 DialogHexEdit::~DialogHexEdit()
