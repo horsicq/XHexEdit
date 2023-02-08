@@ -149,11 +149,6 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
 void XHexEdit::updateData()
 {
     if (getDevice()) {
-        if (getXInfoDB()) {
-            QList<XBinary::MEMORY_REPLACE> listMR = getXInfoDB()->getMemoryReplaces(getMemoryMap()->nModuleAddress, getMemoryMap()->nImageSize);
-
-            setMemoryReplaces(listMR);
-        }
         // Update cursor position
         qint64 nBlockOffset = getViewOffsetStart();
         qint64 nCursorOffset = nBlockOffset + getCursorDelta();
