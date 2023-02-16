@@ -33,7 +33,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     addColumn(tr("Hex"));
     setSelectionEnable(false);     // TODO Set/Get
     setTextFont(getMonoFont(10));  // TODO const !!! mb move to XDeviceTableView
-    setBlinkingCursorEnable(true);
+//    setBlinkingCursorEnable(true);
 }
 
 void XHexEdit::_adjustView()
@@ -58,7 +58,7 @@ void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
     setDevice(pDevice);
     g_nStartOffset = nStartOffset;
 
-    resetCursorData();
+//    resetCursorData();
 
     adjustColumns();
 
@@ -70,7 +70,7 @@ void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
 
     setTotalLineCount(nTotalLineCount);
 
-    setCursorViewOffset(nStartOffset, COLUMN_HEX);
+    _initSetSelection(nStartOffset, 1);
 
     reload(true);
 }
@@ -151,16 +151,16 @@ void XHexEdit::updateData()
     if (getDevice()) {
         // Update cursor position
         qint64 nBlockOffset = getViewOffsetStart();
-        qint64 nCursorOffset = nBlockOffset + getCursorDelta();
+//        qint64 nCursorOffset = nBlockOffset + getCursorDelta();
 
-        if (nCursorOffset >= getViewSize()) {
-            nCursorOffset = getViewSize() - 1;
-        }
+//        if (nCursorOffset >= getViewSize()) {
+//            nCursorOffset = getViewSize() - 1;
+//        }
 
         //        STATE state=getState();
 
         //        setCursorOffset(nCursorOffset,-1,state.varCursorExtraInfo.toInt());
-        setCursorViewOffset(nCursorOffset);
+//        setCursorViewOffset(nCursorOffset);
 
         XBinary::MODE mode = XBinary::getWidthModeFromByteSize(g_nAddressWidth);
 
@@ -218,7 +218,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                 QString sSymbol;
 
                 bool bSelected = isViewOffsetSelected(nDataBlockStartOffset + nIndex);
-                bool bCursor = (state.nCursorViewOffset == (nDataBlockStartOffset + nIndex));  // TODO
+//                bool bCursor = (state.nCursorViewOffset == (nDataBlockStartOffset + nIndex));  // TODO
 
                 QRect rectSymbol;
 
@@ -227,7 +227,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                     sSymbol = sHex;
                 }
 
-                if (bSelected | bCursor) {
+                if (bSelected) {
                     QRect rectSelected;
                     rectSelected.setRect(rectSymbol.x(), rectSymbol.y() + getLineDelta(), rectSymbol.width(), rectSymbol.height());
 
@@ -235,20 +235,20 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                         pPainter->fillRect(rectSelected, viewport()->palette().color(QPalette::Highlight));
                     }
 
-                    if (bCursor) {
-                        if (nColumn == state.cursorPosition.nColumn) {
-                            qint32 nX = rectSymbol.x();
+//                    if (bCursor) {
+//                        if (nColumn == state.cursorPosition.nColumn) {
+//                            qint32 nX = rectSymbol.x();
 
-                            if (state.varCursorExtraInfo.toInt() == BYTEPOS_LOW) {
-                                nX += getCharWidth();
-                            }
+//                            if (state.varCursorExtraInfo.toInt() == BYTEPOS_LOW) {
+//                                nX += getCharWidth();
+//                            }
 
-                            QRect rectCursor;
-                            rectCursor.setRect(nX, rectSymbol.y() + getLineDelta() + rectSymbol.height(), getCharWidth(), g_nCursorHeight);
+//                            QRect rectCursor;
+//                            rectCursor.setRect(nX, rectSymbol.y() + getLineDelta() + rectSymbol.height(), getCharWidth(), g_nCursorHeight);
 
-                            setCursorData(rectCursor, QRect(), sSymbol, nIndex);
-                        }
-                    }
+//                            setCursorData(rectCursor, QRect(), sSymbol, nIndex);
+//                        }
+//                    }
                 }
 
                 pPainter->drawText(rectSymbol.x(), rectSymbol.y() + nHeight, sSymbol);
@@ -264,11 +264,12 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
         pEvent->matches(QKeySequence::MoveToNextPage) || pEvent->matches(QKeySequence::MoveToPreviousPage) || pEvent->matches(QKeySequence::MoveToStartOfDocument) ||
         pEvent->matches(QKeySequence::MoveToEndOfDocument) || ((pEvent->key() >= Qt::Key_A) && (pEvent->key() <= Qt::Key_F)) ||
         ((pEvent->key() >= Qt::Key_0) && (pEvent->key() <= Qt::Key_9)) || (pEvent->key() == Qt::Key_Delete) || (pEvent->key() == Qt::Key_Backspace)) {
+
+        STATE state = getState();
         qint64 nViewStart = getViewOffsetStart();
 
         if (pEvent->matches(QKeySequence::MoveToNextChar) || ((pEvent->key() >= Qt::Key_A) && (pEvent->key() <= Qt::Key_F)) ||
             ((pEvent->key() >= Qt::Key_0) && (pEvent->key() <= Qt::Key_9)) || (pEvent->key() == Qt::Key_Delete)) {
-            STATE state = getState();
 
             if (((pEvent->key() >= Qt::Key_A) && (pEvent->key() <= Qt::Key_F)) || ((pEvent->key() >= Qt::Key_0) && (pEvent->key() <= Qt::Key_9)) ||
                 (pEvent->key() == Qt::Key_Delete)) {
@@ -278,10 +279,10 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
                     nKey = Qt::Key_0;
                 }
 
-                if (writeHexKey(state.nCursorViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), nKey)) {
-                    setEdited(state.nCursorViewOffset, 1); // TODO Check mb Global
+                if (writeHexKey(state.nSelectionViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), nKey)) {
+                    setEdited(state.nSelectionViewOffset, 1); // TODO Check mb Global
 
-                    emit dataChanged(state.nCursorViewOffset, 1);
+                    emit dataChanged(state.nSelectionViewOffset, 1);
                 }
             }
 
@@ -289,18 +290,15 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
                 state.varCursorExtraInfo = BYTEPOS_LOW;
             } else {
                 state.varCursorExtraInfo = BYTEPOS_HIGH;
-                state.nCursorViewOffset++;
+                state.nSelectionViewOffset++;
             }
-
-            setCursorViewOffset(state.nCursorViewOffset, -1, state.varCursorExtraInfo);
         } else if (pEvent->matches(QKeySequence::MoveToPreviousChar) || (pEvent->key() == Qt::Key_Backspace)) {
-            STATE state = getState();
 
             if ((pEvent->key() == Qt::Key_Backspace)) {
-                if (writeHexKey(state.nCursorViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), Qt::Key_0)) {
-                    setEdited(state.nCursorViewOffset, 1); // TODO Check mb Global
+                if (writeHexKey(state.nSelectionViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), Qt::Key_0)) {
+                    setEdited(state.nSelectionViewOffset, 1); // TODO Check mb Global
 
-                    emit dataChanged(state.nCursorViewOffset, 1);
+                    emit dataChanged(state.nSelectionViewOffset, 1);
                 }
             }
 
@@ -308,32 +306,32 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
                 state.varCursorExtraInfo = BYTEPOS_HIGH;
             } else {
                 state.varCursorExtraInfo = BYTEPOS_LOW;
-                state.nCursorViewOffset--;
+                state.nSelectionViewOffset--;
             }
-
-            setCursorViewOffset(state.nCursorViewOffset, -1, state.varCursorExtraInfo);
         } else if (pEvent->matches(QKeySequence::MoveToNextLine)) {
-            setCursorViewOffset(getCursorViewOffset() + g_nBytesProLine);
+            state.nSelectionViewOffset = state.nSelectionViewOffset + g_nBytesProLine;
         } else if (pEvent->matches(QKeySequence::MoveToPreviousLine)) {
-            setCursorViewOffset(getCursorViewOffset() - g_nBytesProLine);
+            state.nSelectionViewOffset = state.nSelectionViewOffset - g_nBytesProLine;
         } else if (pEvent->matches(QKeySequence::MoveToStartOfLine)) {
-            setCursorViewOffset(getCursorViewOffset() - (getCursorDelta() % g_nBytesProLine));
+            // TODO
         } else if (pEvent->matches(QKeySequence::MoveToEndOfLine)) {
-            setCursorViewOffset(getCursorViewOffset() - (getCursorDelta() % g_nBytesProLine) + g_nBytesProLine - 1);
+            // TODO
         }
 
-        if ((getCursorViewOffset() < 0) || (pEvent->matches(QKeySequence::MoveToStartOfDocument))) {
-            setCursorViewOffset(0, -1, BYTEPOS_HIGH);
+        if ((state.nSelectionViewOffset < 0) || (pEvent->matches(QKeySequence::MoveToStartOfDocument))) {
+            state.varCursorExtraInfo = BYTEPOS_HIGH;
+            state.nSelectionViewOffset = 0;
         }
 
-        if ((getCursorViewOffset() >= getViewSize()) || (pEvent->matches(QKeySequence::MoveToEndOfDocument))) {
-            setCursorViewOffset(getViewSize() - 1, -1, BYTEPOS_LOW);
+        if ((state.nSelectionViewOffset >= getViewSize()) || (pEvent->matches(QKeySequence::MoveToEndOfDocument))) {
+            state.varCursorExtraInfo = BYTEPOS_LOW;
+            state.nSelectionViewOffset = getViewSize() - 1;
         }
 
         if (pEvent->matches(QKeySequence::MoveToNextChar) || pEvent->matches(QKeySequence::MoveToPreviousChar) || pEvent->matches(QKeySequence::MoveToNextLine) ||
             pEvent->matches(QKeySequence::MoveToPreviousLine) || ((pEvent->key() >= Qt::Key_A) && (pEvent->key() <= Qt::Key_F)) ||
             ((pEvent->key() >= Qt::Key_0) && (pEvent->key() <= Qt::Key_9)) || (pEvent->key() == Qt::Key_Delete) || (pEvent->key() == Qt::Key_Backspace)) {
-            qint64 nRelOffset = getCursorViewOffset() - nViewStart;
+            qint64 nRelOffset = state.nSelectionViewOffset - nViewStart;
 
             if (nRelOffset >= g_nBytesProLine * getLinesProPage()) {
                 _goToViewOffset(nViewStart + g_nBytesProLine, true);
@@ -350,8 +348,10 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
             }
         } else if (pEvent->matches(QKeySequence::MoveToStartOfDocument) || pEvent->matches(QKeySequence::MoveToEndOfDocument))  // TODO
         {
-            _goToViewOffset(getCursorViewOffset());
+            _goToViewOffset(state.nSelectionViewOffset);
         }
+
+        setState(state);
 
         viewport()->update();
 
