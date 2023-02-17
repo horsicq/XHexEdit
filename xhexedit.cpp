@@ -31,9 +31,10 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
 
     addColumn(tr("Offset"));
     addColumn(tr("Hex"));
-    setSelectionEnable(false);     // TODO Set/Get
+    setSelectionEnable(true);     // TODO Set/Get
     setTextFont(getMonoFont(10));  // TODO const !!! mb move to XDeviceTableView
 //    setBlinkingCursorEnable(true);
+    setMaxSelectionViewSize(1);
 }
 
 void XHexEdit::_adjustView()
@@ -56,7 +57,7 @@ void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
 {
     // mb TODO options !!!
     setDevice(pDevice);
-    g_nStartOffset = nStartOffset;
+    g_nStartOffset = deviceOffsetToViewOffset(nStartOffset, true);
 
 //    resetCursorData();
 
@@ -70,7 +71,13 @@ void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
 
     setTotalLineCount(nTotalLineCount);
 
-    _initSetSelection(nStartOffset, 1);
+    STATE state = getState();
+
+    state.varCursorExtraInfo = BYTEPOS_HIGH;
+    state.nSelectionViewOffset = g_nStartOffset;
+    state.nSelectionViewSize = 1;
+
+    setState(state);
 
     reload(true);
 }
@@ -202,7 +209,14 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
 
     if (nColumn == COLUMN_ADDRESS) {
         if (nRow < g_listAddresses.count()) {
-            pPainter->drawText(nLeft + getCharWidth(), nTop + nHeight, g_listAddresses.at(nRow));  // TODO Text Optional
+            QRect rectSymbol;
+
+            rectSymbol.setLeft(nLeft + getCharWidth());
+            rectSymbol.setTop(nTop + getLineDelta());
+            rectSymbol.setWidth(nWidth);
+            rectSymbol.setHeight(nHeight - getLineDelta());
+
+            pPainter->drawText(rectSymbol, g_listAddresses.at(nRow));
         }
     } else if (nColumn == COLUMN_HEX) {
         STATE state = getState();
@@ -227,31 +241,37 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                     sSymbol = sHex;
                 }
 
-                if (bSelected) {
-                    QRect rectSelected;
-                    rectSelected.setRect(rectSymbol.x(), rectSymbol.y() + getLineDelta(), rectSymbol.width(), rectSymbol.height());
-
+                if (nColumn == COLUMN_HEX) {
                     if (bSelected) {
-                        pPainter->fillRect(rectSelected, viewport()->palette().color(QPalette::Highlight));
+                        QRect _rectSymbol = rectSymbol;
+
+                        if (state.varCursorExtraInfo.toInt() == BYTEPOS_LOW) {
+                            _rectSymbol.setLeft( rectSymbol.left() + getCharWidth());
+                            _rectSymbol.setWidth(getCharWidth());
+                        } else if (state.varCursorExtraInfo.toInt() == BYTEPOS_HIGH) {
+                            _rectSymbol.setWidth(getCharWidth());
+                        }
+
+                        pPainter->fillRect(_rectSymbol, viewport()->palette().color(QPalette::Highlight));
+
+    //                    if (bCursor) {
+    //                        if (nColumn == state.cursorPosition.nColumn) {
+    //                            qint32 nX = rectSymbol.x();
+
+    //                            if (state.varCursorExtraInfo.toInt() == BYTEPOS_LOW) {
+    //                                nX += getCharWidth();
+    //                            }
+
+    //                            QRect rectCursor;
+    //                            rectCursor.setRect(nX, rectSymbol.y() + getLineDelta() + rectSymbol.height(), getCharWidth(), g_nCursorHeight);
+
+    //                            setCursorData(rectCursor, QRect(), sSymbol, nIndex);
+    //                        }
+    //                    }
                     }
-
-//                    if (bCursor) {
-//                        if (nColumn == state.cursorPosition.nColumn) {
-//                            qint32 nX = rectSymbol.x();
-
-//                            if (state.varCursorExtraInfo.toInt() == BYTEPOS_LOW) {
-//                                nX += getCharWidth();
-//                            }
-
-//                            QRect rectCursor;
-//                            rectCursor.setRect(nX, rectSymbol.y() + getLineDelta() + rectSymbol.height(), getCharWidth(), g_nCursorHeight);
-
-//                            setCursorData(rectCursor, QRect(), sSymbol, nIndex);
-//                        }
-//                    }
                 }
 
-                pPainter->drawText(rectSymbol.x(), rectSymbol.y() + nHeight, sSymbol);
+                pPainter->drawText(rectSymbol, sSymbol);
             }
         }
     }
