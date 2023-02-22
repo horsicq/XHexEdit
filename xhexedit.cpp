@@ -98,6 +98,8 @@ bool XHexEdit::writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey)
             nValue = 10 + (nKey - Qt::Key_A);
         } else if ((nKey >= Qt::Key_0) && (nKey <= Qt::Key_9)) {
             nValue = (nKey - Qt::Key_0);
+        } else if ((nKey == Qt::Key_Backspace) || (nKey == Qt::Key_Delete)) {
+            nValue = 0;
         }
 
         if (bytePos == BYTEPOS_LOW) {
@@ -293,13 +295,8 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
 
             if (((pEvent->key() >= Qt::Key_A) && (pEvent->key() <= Qt::Key_F)) || ((pEvent->key() >= Qt::Key_0) && (pEvent->key() <= Qt::Key_9)) ||
                 (pEvent->key() == Qt::Key_Delete)) {
-                qint32 nKey = pEvent->key();
 
-                if (pEvent->key() == Qt::Key_Delete) {
-                    nKey = Qt::Key_0;
-                }
-
-                if (writeHexKey(state.nSelectionViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), nKey)) {
+                if (writeHexKey(state.nSelectionViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), pEvent->key())) {
                     setEdited(state.nSelectionViewOffset, 1); // TODO Check mb Global
 
                     emit dataChanged(state.nSelectionViewOffset, 1);
@@ -315,7 +312,7 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
         } else if (pEvent->matches(QKeySequence::MoveToPreviousChar) || (pEvent->key() == Qt::Key_Backspace)) {
 
             if ((pEvent->key() == Qt::Key_Backspace)) {
-                if (writeHexKey(state.nSelectionViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), Qt::Key_0)) {
+                if (writeHexKey(state.nSelectionViewOffset, (BYTEPOS)(state.varCursorExtraInfo.toInt()), pEvent->key())) {
                     setEdited(state.nSelectionViewOffset, 1); // TODO Check mb Global
 
                     emit dataChanged(state.nSelectionViewOffset, 1);
