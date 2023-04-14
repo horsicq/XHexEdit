@@ -372,6 +372,7 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
     }
     //    else if(pEvent->matches(QKeySequence::SelectAll))
     //    {
+    //        // TODO
     //        _selectAllSlot();
     //    }
     else {
