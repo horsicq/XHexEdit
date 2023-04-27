@@ -69,7 +69,7 @@ void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
         nTotalLineCount--;
     }
 
-    setTotalLineCount(nTotalLineCount);
+    setTotalScrollCount(nTotalLineCount);
 
     STATE state = getState();
 
@@ -380,7 +380,7 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
     }
 }
 
-qint64 XHexEdit::getCurrentLineFromScroll()
+qint64 XHexEdit::getCurrentViewOffsetFromScroll()
 {
     qint64 nResult = 0;
 

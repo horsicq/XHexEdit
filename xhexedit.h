@@ -51,7 +51,7 @@ protected:
     virtual void updateData();
     virtual void paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight);
     virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual qint64 getCurrentLineFromScroll();
+    virtual qint64 getCurrentViewOffsetFromScroll();
     virtual void setCurrentViewOffsetToScroll(qint64 nOffset);
     virtual void adjustColumns();
     virtual void registerShortcuts(bool bState);
