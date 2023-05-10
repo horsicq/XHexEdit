@@ -254,7 +254,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                             _rectSymbol.setWidth(getCharWidth());
                         }
 
-                        pPainter->fillRect(_rectSymbol, getColorSelected());
+                        pPainter->fillRect(_rectSymbol, getColor(TCLOLOR_SELECTED));
 
                         //                    if (bCursor) {
                         //                        if (nColumn == state.cursorPosition.nColumn) {
