@@ -32,7 +32,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     addColumn(tr("Offset"));
     addColumn(tr("Hex"));
     setSelectionEnable(true);      // TODO Set/Get
-    setTextFont(getMonoFont(10));  // TODO const !!! mb move to XDeviceTableView
+    setTextFont(getMonoFont(10));  // TODO const Check/ mb move to XDeviceTableView
                                    //    setBlinkingCursorEnable(true);
     setMaxSelectionViewSize(1);
 }
