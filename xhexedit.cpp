@@ -35,6 +35,8 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     setTextFont(getMonoFont(10));  // TODO const Check/ mb move to XDeviceTableView
                                    //    setBlinkingCursorEnable(true);
     setMaxSelectionViewSize(1);
+
+    setVerticalLinesVisible(false);
 }
 
 void XHexEdit::_adjustView()
