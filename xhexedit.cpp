@@ -135,7 +135,7 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
             osResult.varData = BYTEPOS_HIGH;
         } else if (cursorPosition.nColumn == COLUMN_HEX) {
             qint32 nOffset = (cursorPosition.nCellLeft - getSideDelta()) / (getCharWidth() * 2 + getSideDelta());
-            qint32 nPos = (cursorPosition.nCellLeft - getSideDelta()) % (getCharWidth() * 2 + getSideDelta());
+            qint32 nPos = (cursorPosition.nCellLeft - getSideDelta()) % (int)((getCharWidth() * 2 + getSideDelta()));
 
             osResult.nViewOffset = nBlockOffset + nOffset;
             osResult.nSize = 1;
