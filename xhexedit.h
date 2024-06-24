@@ -40,7 +40,7 @@ public:
     XHexEdit(QWidget *pParent = nullptr);
 
     void _adjustView();
-    void adjustView();
+    virtual void adjustView();
     void setData(QIODevice *pDevice, quint64 nStartOffset);
 
 private:
