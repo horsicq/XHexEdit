@@ -26,8 +26,6 @@ DialogHexEdit::DialogHexEdit(QWidget *pParent) : XShortcutsDialog(pParent), ui(n
 {
     ui->setupUi(this);
 
-    setWindowFlags(Qt::Window);
-
     connect(ui->widgetHexEdit, SIGNAL(dataChanged(qint64, qint64)), this, SIGNAL(dataChanged(qint64, qint64)));
 }
 
