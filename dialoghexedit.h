@@ -37,7 +37,9 @@ public:
     void setData(QIODevice *pDevice, qint64 nStartOffset);
     void setBackupDevice(QIODevice *pDevice);
     virtual void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions);
-    virtual void adjustView() {}
+    virtual void adjustView()
+    {
+    }
 
 signals:
     void dataChanged(qint64 nDeviceOffset, qint64 nDeviceSize);
@@ -46,7 +48,10 @@ private slots:
     void on_pushButtonClose_clicked();
 
 protected:
-    virtual void registerShortcuts(bool bState) { Q_UNUSED(bState) }
+    virtual void registerShortcuts(bool bState)
+    {
+        Q_UNUSED(bState)
+    }
 
 private:
     Ui::DialogHexEdit *ui;
