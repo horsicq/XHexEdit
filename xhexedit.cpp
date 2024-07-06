@@ -39,16 +39,16 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     setVerticalLinesVisible(false);
 }
 
-void XHexEdit::_adjustView()
+void XHexEdit::adjustView()
 {
     setTextFontFromOptions(XOptions::ID_HEX_FONT);
 
     g_bIsAddressColon = getGlobalOptions()->getValue(XOptions::ID_HEX_ADDRESSCOLON).toBool();
 }
 
-void XHexEdit::adjustView()
+void XHexEdit::_adjustView()
 {
-    _adjustView();
+    adjustView();
 
     if (getDevice()) {
         reload(true);
@@ -62,6 +62,8 @@ void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
     g_nStartOffset = deviceOffsetToViewOffset(nStartOffset, true);
 
     //    resetCursorData();
+
+    adjustView();
 
     adjustColumns();
 
