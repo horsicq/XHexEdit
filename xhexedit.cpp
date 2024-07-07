@@ -44,6 +44,8 @@ void XHexEdit::adjustView()
     setTextFontFromOptions(XOptions::ID_HEX_FONT);
 
     g_bIsAddressColon = getGlobalOptions()->getValue(XOptions::ID_HEX_ADDRESSCOLON).toBool();
+
+    viewport()->update();
 }
 
 void XHexEdit::_adjustView()
