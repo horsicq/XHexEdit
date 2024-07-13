@@ -37,9 +37,7 @@ public:
     void setData(QIODevice *pDevice, qint64 nStartOffset);
     void setBackupDevice(QIODevice *pDevice);
     virtual void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions);
-    virtual void adjustView()
-    {
-    }
+    virtual void adjustView();
 
 signals:
     void dataChanged(qint64 nDeviceOffset, qint64 nDeviceSize);

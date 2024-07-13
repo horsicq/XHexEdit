@@ -51,6 +51,11 @@ void DialogHexEdit::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
     XShortcutsDialog::setGlobal(pShortcuts, pXOptions);
 }
 
+void DialogHexEdit::adjustView()
+{
+
+}
+
 void DialogHexEdit::on_pushButtonClose_clicked()
 {
     this->close();
