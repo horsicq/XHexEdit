@@ -60,3 +60,8 @@ void DialogHexEdit::on_pushButtonClose_clicked()
 {
     this->close();
 }
+
+void DialogHexEdit::registerShortcuts(bool bState)
+{
+    Q_UNUSED(bState)
+}
