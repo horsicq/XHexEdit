@@ -124,7 +124,7 @@ bool XHexEdit::writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey)
     return bResult;
 }
 
-XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_POSITION cursorPosition)
+XAbstractTableView::OS XHexEdit::cursorPositionToOS(const XAbstractTableView::CURSOR_POSITION &cursorPosition)
 {
     OS osResult = {};
 
@@ -138,8 +138,8 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(XAbstractTableView::CURSOR_P
             osResult.nSize = 1;
             osResult.varData = BYTEPOS_HIGH;
         } else if (cursorPosition.nColumn == COLUMN_HEX) {
-            qint32 nOffset = (cursorPosition.nCellLeft - getSideDelta()) / (getCharWidth() * 2 + getSideDelta());
-            qint32 nPos = (cursorPosition.nCellLeft - getSideDelta()) % (int)((getCharWidth() * 2 + getSideDelta()));
+            qint32 nOffset = (cursorPosition.nAreaLeft - getSideDelta()) / (getCharWidth() * 2 + getSideDelta());
+            qint32 nPos = (cursorPosition.nAreaLeft - getSideDelta()) % (int)((getCharWidth() * 2 + getSideDelta()));
 
             osResult.nViewOffset = nBlockOffset + nOffset;
             osResult.nSize = 1;
