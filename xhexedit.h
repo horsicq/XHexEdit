@@ -64,7 +64,7 @@ private:
     QList<QString> g_listAddresses;
     qint32 g_nCursorHeight;
     quint64 g_nStartOffset;
-    bool g_bIsAddressColon;
+    bool g_bIsLocationColon;
 };
 
 #endif  // XHEXEDIT_H

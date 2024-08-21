@@ -27,7 +27,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     g_nCursorHeight = 2;   // TODO Set/Get !!!
     g_nDataBlockSize = 0;
     g_nStartOffset = 0;
-    g_bIsAddressColon = false;
+    g_bIsLocationColon = false;
 
     addColumn(tr("Offset"));
     addColumn(tr("Hex"));
@@ -43,7 +43,7 @@ void XHexEdit::adjustView()
 {
     setTextFontFromOptions(XOptions::ID_HEX_FONT);
 
-    g_bIsAddressColon = getGlobalOptions()->getValue(XOptions::ID_HEX_ADDRESSCOLON).toBool();
+    g_bIsLocationColon = getGlobalOptions()->getValue(XOptions::ID_HEX_LOCATIONCOLON).toBool();
 
     viewport()->update();
 }
@@ -195,7 +195,7 @@ void XHexEdit::updateData()
 
                 QString sAddress;
 
-                if (g_bIsAddressColon) {
+                if (g_bIsLocationColon) {
                     sAddress = XBinary::valueToHexColon(mode, nCurrentAddress);
                 } else {
                     sAddress = XBinary::valueToHex(mode, nCurrentAddress);
