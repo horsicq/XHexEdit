@@ -51,8 +51,8 @@ protected:
     virtual void updateData();
     virtual void paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight);
     virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual qint64 getCurrentViewOffsetFromScroll();
-    virtual void setCurrentViewOffsetToScroll(qint64 nOffset);
+    virtual qint64 getCurrentViewPosFromScroll();
+    virtual void setCurrentViewPosToScroll(qint64 nOffset);
     virtual void adjustColumns();
     virtual void registerShortcuts(bool bState);
 
@@ -60,8 +60,8 @@ private:
     qint32 g_nBytesProLine;
     qint32 g_nDataBlockSize;
     QByteArray g_baDataHexBuffer;
-    qint32 g_nAddressWidth;
-    QList<QString> g_listAddresses;
+    qint32 g_nLocationWidth;
+    QList<QString> g_listLocations;
     qint32 g_nCursorHeight;
     quint64 g_nStartOffset;
     bool g_bIsLocationColon;
