@@ -23,7 +23,7 @@
 XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
 {
     g_nBytesProLine = 16;  // TODO Set/Get !!!
-    g_nLocationWidth = 8;   // TODO Set/Get !!!
+    g_nLocationWidth = 8;  // TODO Set/Get !!!
     g_nCursorHeight = 2;   // TODO Set/Get !!!
     g_nDataBlockSize = 0;
     g_nStartOffset = 0;
