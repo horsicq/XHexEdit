@@ -17,11 +17,6 @@ FORMS += \
     include($$PWD/../Controls/xabstracttableview.pri)
 }
 
-!contains(XCONFIG, xbinary) {
-    XCONFIG += xbinary
-    include($$PWD/../Formats/xbinary.pri)
-}
-
 DISTFILES += \
     $$PWD/LICENSE \
     $$PWD/README.md \
