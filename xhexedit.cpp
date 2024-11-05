@@ -217,7 +217,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
 
     if (nColumn == COLUMN_ADDRESS) {
         if (nRow < g_listLocations.count()) {
-            QRect rectSymbol;
+            QRectF rectSymbol;
 
             rectSymbol.setLeft(nLeft + getCharWidth());
             rectSymbol.setTop(nTop + getLineDelta());
@@ -242,7 +242,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
                 bool bSelected = isViewPosSelected(nDataBlockStartOffset + nIndex);
                 //                bool bCursor = (state.nCursorViewPos == (nDataBlockStartOffset + nIndex));  // TODO
 
-                QRect rectSymbol;
+                QRectF rectSymbol;
 
                 if (nColumn == COLUMN_HEX) {
                     rectSymbol.setRect(nLeft + getCharWidth() + (i * 2) * getCharWidth() + i * getSideDelta(), nTop, 2 * getCharWidth() + getSideDelta(), nHeight);
@@ -251,7 +251,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
 
                 if (nColumn == COLUMN_HEX) {
                     if (bSelected) {
-                        QRect _rectSymbol = rectSymbol;
+                        QRectF _rectSymbol = rectSymbol;
 
                         if (state.varCursorExtraInfo.toInt() == BYTEPOS_LOW) {
                             _rectSymbol.setLeft(rectSymbol.left() + getCharWidth());
