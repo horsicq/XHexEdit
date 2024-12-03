@@ -1,8 +1,12 @@
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-include(${CMAKE_CURRENT_LIST_DIR}/../Controls/xabstracttableview.cmake)
+if (NOT DEFINED XABSTRACTTABLEVIEW_SOURCES)
+    include(${CMAKE_CURRENT_LIST_DIR}/../Controls/xabstracttableview.cmake)
+    set(XHEXVIEW_SOURCES ${XHEXVIEW_SOURCES} ${XABSTRACTTABLEVIEW_SOURCES})
+endif()
 
 set(XHEXEDIT_SOURCES
+    ${XHEXVIEW_SOURCES}
     ${XABSTRACTTABLEVIEW_SOURCES}
     ${CMAKE_CURRENT_LIST_DIR}/dialoghexedit.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dialoghexedit.h
