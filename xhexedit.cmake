@@ -7,7 +7,6 @@ endif()
 
 set(XHEXEDIT_SOURCES
     ${XHEXEDIT_SOURCES}
-    ${XABSTRACTTABLEVIEW_SOURCES}
     ${CMAKE_CURRENT_LIST_DIR}/dialoghexedit.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dialoghexedit.h
     ${CMAKE_CURRENT_LIST_DIR}/dialoghexedit.ui
