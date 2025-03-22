@@ -26,7 +26,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     g_nLocationWidth = 8;  // TODO Set/Get !!!
     g_nCursorHeight = 2;   // TODO Set/Get !!!
     g_nDataBlockSize = 0;
-    g_nStartOffset = 0;
+    g_nStartViewOffset = 0;
     g_bIsLocationColon = false;
 
     addColumn(tr("Offset"));
@@ -57,11 +57,11 @@ void XHexEdit::_adjustView()
     }
 }
 
-void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
+void XHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSize)
 {
     // mb TODO options !!!
-    setDevice(pDevice);
-    g_nStartOffset = deviceOffsetToViewPos(nStartOffset, true);
+    setDevice(pDevice, nStartOffset, nTotalSize);
+    g_nStartViewOffset = deviceOffsetToViewPos(nStartOffset);
 
     //    resetCursorData();
 
@@ -80,7 +80,7 @@ void XHexEdit::setData(QIODevice *pDevice, quint64 nStartOffset)
     STATE state = getState();
 
     state.varCursorExtraInfo = BYTEPOS_HIGH;
-    state.nSelectionViewPos = g_nStartOffset;
+    state.nSelectionViewPos = g_nStartViewOffset;
     state.nSelectionViewSize = 1;
 
     setState(state);
@@ -191,7 +191,7 @@ void XHexEdit::updateData()
             g_baDataHexBuffer = QByteArray(baDataBuffer.toHex());
 
             for (qint32 i = 0; i < g_nDataBlockSize; i += g_nBytesProLine) {
-                XADDR nCurrentAddress = g_nStartOffset + i + nBlockOffset;
+                XADDR nCurrentAddress = g_nStartViewOffset + i + nBlockOffset;
 
                 QString sAddress;
 

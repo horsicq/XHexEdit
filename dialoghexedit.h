@@ -34,7 +34,7 @@ public:
     explicit DialogHexEdit(QWidget *pParent = nullptr);
     ~DialogHexEdit();
 
-    void setData(QIODevice *pDevice, qint64 nStartOffset);
+    void setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSize);
     virtual void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions);
     virtual void adjustView();
 

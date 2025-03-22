@@ -34,9 +34,9 @@ DialogHexEdit::~DialogHexEdit()
     delete ui;
 }
 
-void DialogHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset)
+void DialogHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSize)
 {
-    ui->widgetHexEdit->setData(pDevice, nStartOffset);
+    ui->widgetHexEdit->setData(pDevice, nStartOffset, nTotalSize);
     ui->widgetHexEdit->setFocus();
 }
 

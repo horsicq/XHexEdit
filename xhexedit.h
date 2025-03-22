@@ -41,7 +41,7 @@ public:
 
     void _adjustView();
     virtual void adjustView();
-    void setData(QIODevice *pDevice, quint64 nStartOffset);
+    void setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSize);
 
 private:
     bool writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey);
@@ -63,7 +63,7 @@ private:
     qint32 g_nLocationWidth;
     QList<QString> g_listLocations;
     qint32 g_nCursorHeight;
-    quint64 g_nStartOffset;
+    quint64 g_nStartViewOffset;
     bool g_bIsLocationColon;
 };
 
