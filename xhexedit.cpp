@@ -26,7 +26,7 @@ XHexEdit::XHexEdit(QWidget *pParent) : XDeviceTableView(pParent)
     g_nLocationWidth = 8;  // TODO Set/Get !!!
     g_nCursorHeight = 2;   // TODO Set/Get !!!
     g_nDataBlockSize = 0;
-    g_nStartViewOffset = 0;
+    g_nStartViewPos = 0;
     g_bIsLocationColon = false;
 
     addColumn(tr("Offset"));
@@ -61,7 +61,7 @@ void XHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSiz
 {
     // mb TODO options !!!
     setDevice(pDevice, nStartOffset, nTotalSize);
-    g_nStartViewOffset = deviceOffsetToViewPos(nStartOffset);
+    g_nStartViewPos = deviceOffsetToViewPos(nStartOffset);
 
     //    resetCursorData();
 
@@ -80,7 +80,7 @@ void XHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSiz
     STATE state = getState();
 
     state.varCursorExtraInfo = BYTEPOS_HIGH;
-    state.nSelectionViewPos = g_nStartViewOffset;
+    state.nSelectionViewPos = g_nStartViewPos;
     state.nSelectionViewSize = 1;
 
     setState(state);
@@ -88,36 +88,40 @@ void XHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSiz
     reload(true);
 }
 
-bool XHexEdit::writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey)
+bool XHexEdit::writeHexKey(qint64 nViewPos, BYTEPOS bytePos, qint32 nKey)
 {
     // TODO delete/backspace
     bool bResult = false;
 
-    QByteArray baByte = read_array(nOffset, 1);
+    qint64 nDeviceOffset = viewPosToDeviceOffset(nViewPos);
 
-    if (baByte.size()) {
-        quint8 nByte = XBinary::_read_uint8(baByte.data());
+    if (nDeviceOffset != -1) {
+        QByteArray baByte = read_array(nDeviceOffset, 1);
 
-        quint8 nValue = 0;
+        if (baByte.size()) {
+            quint8 nByte = XBinary::_read_uint8(baByte.data());
 
-        if ((nKey >= Qt::Key_A) && (nKey <= Qt::Key_F)) {
-            nValue = 10 + (nKey - Qt::Key_A);
-        } else if ((nKey >= Qt::Key_0) && (nKey <= Qt::Key_9)) {
-            nValue = (nKey - Qt::Key_0);
-        } else if ((nKey == Qt::Key_Backspace) || (nKey == Qt::Key_Delete)) {
-            nValue = 0;
-        }
+            quint8 nValue = 0;
 
-        if (bytePos == BYTEPOS_LOW) {
-            nByte &= 0xF0;
-            nByte += nValue;
-        } else if (bytePos == BYTEPOS_HIGH) {
-            nByte &= 0x0F;
-            nByte += (nValue << 4);
-        }
+            if ((nKey >= Qt::Key_A) && (nKey <= Qt::Key_F)) {
+                nValue = 10 + (nKey - Qt::Key_A);
+            } else if ((nKey >= Qt::Key_0) && (nKey <= Qt::Key_9)) {
+                nValue = (nKey - Qt::Key_0);
+            } else if ((nKey == Qt::Key_Backspace) || (nKey == Qt::Key_Delete)) {
+                nValue = 0;
+            }
 
-        if (write_array(nOffset, (char *)(&nByte), 1) == 1) {
-            bResult = true;
+            if (bytePos == BYTEPOS_LOW) {
+                nByte &= 0xF0;
+                nByte += nValue;
+            } else if (bytePos == BYTEPOS_HIGH) {
+                nByte &= 0x0F;
+                nByte += (nValue << 4);
+            }
+
+            if (write_array(nDeviceOffset, (char *)(&nByte), 1) == 1) {
+                bResult = true;
+            }
         }
     }
 
@@ -165,7 +169,7 @@ void XHexEdit::updateData()
 {
     if (getDevice()) {
         // Update cursor position
-        qint64 nBlockOffset = getViewPosStart();
+        qint64 nBlockViewPos = getViewPosStart();
         //        qint64 nCursorOffset = nBlockOffset + getCursorDelta();
 
         //        if (nCursorOffset >= getViewSize()) {
@@ -183,7 +187,11 @@ void XHexEdit::updateData()
 
         qint32 nDataBlockSize = g_nBytesProLine * getLinesProPage();
 
-        QByteArray baDataBuffer = read_array(nBlockOffset, nDataBlockSize);
+        nDataBlockSize = qMin(nDataBlockSize, (qint32)(getViewSize() - nBlockViewPos));
+
+        qint64 nDeviceOffset = viewPosToDeviceOffset(nBlockViewPos);
+
+        QByteArray baDataBuffer = read_array(nDeviceOffset, nDataBlockSize);
 
         g_nDataBlockSize = baDataBuffer.size();
 
@@ -191,7 +199,7 @@ void XHexEdit::updateData()
             g_baDataHexBuffer = QByteArray(baDataBuffer.toHex());
 
             for (qint32 i = 0; i < g_nDataBlockSize; i += g_nBytesProLine) {
-                XADDR nCurrentAddress = g_nStartViewOffset + i + nBlockOffset;
+                XADDR nCurrentAddress = g_nStartViewPos + i + nBlockViewPos;
 
                 QString sAddress;
 
@@ -207,7 +215,7 @@ void XHexEdit::updateData()
             g_baDataHexBuffer.clear();
         }
 
-        setCurrentBlock(nBlockOffset, g_nDataBlockSize);
+        setCurrentBlock(nBlockViewPos, g_nDataBlockSize);
     }
 }
 

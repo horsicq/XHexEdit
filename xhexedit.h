@@ -44,7 +44,7 @@ public:
     void setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSize);
 
 private:
-    bool writeHexKey(qint64 nOffset, BYTEPOS bytePos, qint32 nKey);
+    bool writeHexKey(qint64 nViewPos, BYTEPOS bytePos, qint32 nKey);
 
 protected:
     virtual OS cursorPositionToOS(const CURSOR_POSITION &cursorPosition);
@@ -63,7 +63,7 @@ private:
     qint32 g_nLocationWidth;
     QList<QString> g_listLocations;
     qint32 g_nCursorHeight;
-    quint64 g_nStartViewOffset;
+    quint64 g_nStartViewPos;
     bool g_bIsLocationColon;
 };
 
