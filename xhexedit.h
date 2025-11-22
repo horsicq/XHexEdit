@@ -57,14 +57,14 @@ protected:
     virtual void registerShortcuts(bool bState);
 
 private:
-    qint32 g_nBytesProLine;
-    qint32 g_nDataBlockSize;
-    QByteArray g_baDataHexBuffer;
-    qint32 g_nLocationWidth;
-    QList<QString> g_listLocations;
-    qint32 g_nCursorHeight;
-    quint64 g_nStartViewPos;
-    bool g_bIsLocationColon;
+    qint32 m_nBytesProLine;
+    qint32 m_nDataBlockSize;
+    QByteArray m_baDataHexBuffer;
+    qint32 m_nLocationWidth;
+    QList<QString> m_listLocations;
+    qint32 m_nCursorHeight;
+    quint64 m_nStartViewPos;
+    bool m_bIsLocationColon;
 };
 
 #endif  // XHEXEDIT_H
