@@ -394,9 +394,9 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
     }
 }
 
-qint64 XHexEdit::getCurrentViewPosFromScroll()
+XVPOS XHexEdit::getCurrentViewPosFromScroll()
 {
-    qint64 nResult = 0;
+    XVPOS nResult = 0;
 
     qint32 nValue = verticalScrollBar()->value();
 
@@ -409,13 +409,13 @@ qint64 XHexEdit::getCurrentViewPosFromScroll()
             nResult = ((double)nValue / (double)getMaxScrollValue()) * getViewSize();
         }
     } else {
-        nResult = (qint64)nValue * m_nBytesProLine;
+        nResult = (XVPOS)nValue * m_nBytesProLine;
     }
 
     return nResult;
 }
 
-void XHexEdit::setCurrentViewPosToScroll(qint64 nOffset)
+void XHexEdit::setCurrentViewPosToScroll(XVPOS nOffset)
 {
     setViewPosStart(nOffset);
 
