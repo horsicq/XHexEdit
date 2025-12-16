@@ -88,7 +88,7 @@ void XHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSiz
     reload(true);
 }
 
-bool XHexEdit::writeHexKey(qint64 nViewPos, BYTEPOS bytePos, qint32 nKey)
+bool XHexEdit::writeHexKey(XVPOS nViewPos, BYTEPOS bytePos, qint32 nKey)
 {
     // TODO delete/backspace
     bool bResult = false;
@@ -135,7 +135,7 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(const XAbstractTableView::CU
     osResult.nViewPos = -1;
 
     if ((cursorPosition.bIsValid) && (cursorPosition.ptype == PT_CELL)) {
-        qint64 nBlockOffset = getViewPosStart() + (cursorPosition.nRow * m_nBytesProLine);
+        XVPOS nBlockOffset = getViewPosStart() + (cursorPosition.nRow * m_nBytesProLine);
 
         if (cursorPosition.nColumn == COLUMN_ADDRESS) {
             osResult.nViewPos = nBlockOffset;
@@ -169,7 +169,7 @@ void XHexEdit::updateData()
 {
     if (getDevice()) {
         // Update cursor position
-        qint64 nBlockViewPos = getViewPosStart();
+        XVPOS nBlockViewPos = getViewPosStart();
         //        qint64 nCursorOffset = nBlockOffset + getCursorDelta();
 
         //        if (nCursorOffset >= getViewSize()) {
@@ -238,7 +238,7 @@ void XHexEdit::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32
         STATE state = getState();
 
         if (nRow * m_nBytesProLine < m_nDataBlockSize) {
-            qint64 nDataBlockStartOffset = getViewPosStart();
+            XVPOS nDataBlockStartOffset = getViewPosStart();
             qint64 nDataBlockSize = qMin(m_nDataBlockSize - nRow * m_nBytesProLine, m_nBytesProLine);
 
             for (qint32 i = 0; i < nDataBlockSize; i++) {
@@ -301,7 +301,7 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
         pEvent->matches(QKeySequence::MoveToEndOfDocument) || ((pEvent->key() >= Qt::Key_A) && (pEvent->key() <= Qt::Key_F)) ||
         ((pEvent->key() >= Qt::Key_0) && (pEvent->key() <= Qt::Key_9)) || (pEvent->key() == Qt::Key_Delete) || (pEvent->key() == Qt::Key_Backspace)) {
         STATE state = getState();
-        qint64 nViewStart = getViewPosStart();
+        XVPOS nViewStart = getViewPosStart();
 
         if (pEvent->matches(QKeySequence::MoveToNextChar) || ((pEvent->key() >= Qt::Key_A) && (pEvent->key() <= Qt::Key_F)) ||
             ((pEvent->key() >= Qt::Key_0) && (pEvent->key() <= Qt::Key_9)) || (pEvent->key() == Qt::Key_Delete)) {
