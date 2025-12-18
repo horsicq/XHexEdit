@@ -60,8 +60,12 @@ void XHexEdit::_adjustView()
 void XHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSize)
 {
     // mb TODO options !!!
-    setDevice(pDevice, nStartOffset, nTotalSize);
-    m_nStartViewPos = deviceOffsetToViewPos(nStartOffset);
+    XBinaryView::OPTIONS options = {};
+    options.nStartOffset = nStartOffset;
+    options.nTotalSize = nTotalSize;
+
+    XDeviceTableView::setData(pDevice, options);
+    m_nStartViewPos = getBinaryView()->deviceOffsetToViewPos(nStartOffset);
 
     //    resetCursorData();
 
@@ -69,9 +73,9 @@ void XHexEdit::setData(QIODevice *pDevice, qint64 nStartOffset, qint64 nTotalSiz
 
     adjustColumns();
 
-    qint64 nTotalLineCount = getViewSize() / m_nBytesProLine;
+    qint64 nTotalLineCount = getBinaryView()->getViewSize() / m_nBytesProLine;
 
-    if (getViewSize() % m_nBytesProLine == 0) {
+    if (getBinaryView()->getViewSize() % m_nBytesProLine == 0) {
         nTotalLineCount--;
     }
 
@@ -93,7 +97,7 @@ bool XHexEdit::writeHexKey(XVPOS nViewPos, BYTEPOS bytePos, qint32 nKey)
     // TODO delete/backspace
     bool bResult = false;
 
-    qint64 nDeviceOffset = viewPosToDeviceOffset(nViewPos);
+    qint64 nDeviceOffset = getBinaryView()->viewPosToDeviceOffset(nViewPos);
 
     if (nDeviceOffset != -1) {
         QByteArray baByte = read_array(nDeviceOffset, 1);
@@ -156,7 +160,7 @@ XAbstractTableView::OS XHexEdit::cursorPositionToOS(const XAbstractTableView::CU
         }
 
         if (!isViewPosValid(osResult.nViewPos)) {
-            osResult.nViewPos = getViewSize();  // TODO Check !!!
+            osResult.nViewPos = getBinaryView()->getViewSize();  // TODO Check !!!
             osResult.nSize = 0;
             osResult.varData = BYTEPOS_HIGH;
         }
@@ -187,9 +191,9 @@ void XHexEdit::updateData()
 
         qint32 nDataBlockSize = m_nBytesProLine * getLinesProPage();
 
-        nDataBlockSize = qMin(nDataBlockSize, (qint32)(getViewSize() - nBlockViewPos));
+        nDataBlockSize = qMin(nDataBlockSize, (qint32)(getBinaryView()->getViewSize() - nBlockViewPos));
 
-        qint64 nDeviceOffset = viewPosToDeviceOffset(nBlockViewPos);
+        qint64 nDeviceOffset = getBinaryView()->viewPosToDeviceOffset(nBlockViewPos);
 
         QByteArray baDataBuffer = read_array(nDeviceOffset, nDataBlockSize);
 
@@ -350,9 +354,9 @@ void XHexEdit::keyPressEvent(QKeyEvent *pEvent)
             state.nSelectionViewPos = 0;
         }
 
-        if ((state.nSelectionViewPos >= getViewSize()) || (pEvent->matches(QKeySequence::MoveToEndOfDocument))) {
+        if ((state.nSelectionViewPos >= getBinaryView()->getViewSize()) || (pEvent->matches(QKeySequence::MoveToEndOfDocument))) {
             state.varCursorExtraInfo = BYTEPOS_LOW;
-            state.nSelectionViewPos = getViewSize() - 1;
+            state.nSelectionViewPos = getBinaryView()->getViewSize() - 1;
         }
 
         if (pEvent->matches(QKeySequence::MoveToNextChar) || pEvent->matches(QKeySequence::MoveToPreviousChar) || pEvent->matches(QKeySequence::MoveToNextLine) ||
@@ -402,11 +406,11 @@ XVPOS XHexEdit::getCurrentViewPosFromScroll()
 
     qint64 nMaxValue = getMaxScrollValue() * m_nBytesProLine;
 
-    if (getViewSize() > nMaxValue) {
+    if (getBinaryView()->getViewSize() > nMaxValue) {
         if (nValue == getMaxScrollValue()) {
-            nResult = getViewSize() - m_nBytesProLine;
+            nResult = getBinaryView()->getViewSize() - m_nBytesProLine;
         } else {
-            nResult = ((double)nValue / (double)getMaxScrollValue()) * getViewSize();
+            nResult = ((double)nValue / (double)getMaxScrollValue()) * getBinaryView()->getViewSize();
         }
     } else {
         nResult = (XVPOS)nValue * m_nBytesProLine;
@@ -421,11 +425,11 @@ void XHexEdit::setCurrentViewPosToScroll(XVPOS nOffset)
 
     qint32 nValue = 0;
 
-    if (getViewSize() > (getMaxScrollValue() * m_nBytesProLine)) {
-        if (nOffset == getViewSize() - m_nBytesProLine) {
+    if (getBinaryView()->getViewSize() > (getMaxScrollValue() * m_nBytesProLine)) {
+        if (nOffset == getBinaryView()->getViewSize() - m_nBytesProLine) {
             nValue = getMaxScrollValue();
         } else {
-            nValue = ((double)(nOffset) / ((double)getViewSize())) * (double)getMaxScrollValue();
+            nValue = ((double)(nOffset) / ((double)getBinaryView()->getViewSize())) * (double)getMaxScrollValue();
         }
     } else {
         nValue = (nOffset) / m_nBytesProLine;
@@ -440,7 +444,7 @@ void XHexEdit::adjustColumns()
 {
     const QFontMetricsF fm(getTextFont());
 
-    if (XBinary::getWidthModeFromSize(getViewSize()) == XBinary::MODE_64) {
+    if (XBinary::getWidthModeFromSize(getBinaryView()->getViewSize()) == XBinary::MODE_64) {
         m_nLocationWidth = 16;
         setColumnWidth(COLUMN_ADDRESS, 2 * getCharWidth() + fm.boundingRect("00000000:00000000").width());
     } else {
